@@ -1,0 +1,4 @@
+# miscellaneous files
+cmake.log
+# directories for simulations
+*build/
