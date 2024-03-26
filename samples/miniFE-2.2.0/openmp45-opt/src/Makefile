@@ -9,18 +9,17 @@ MINIFE_TYPES =  \
 	-DMINIFE_RESTRICT=__restrict__
 
 MINIFE_MATRIX_TYPE = -DMINIFE_CSR_MATRIX
-# MINIFE_MATRIX_TYPE = -DMINIFE_ELL_MATRIX # default was CSR, but changed to ELL because CUDA uses ELL version (compilation of ELL version failed)
 
 #-----------------------------------------------------------------------
 
-CFLAGS = -O3 -mp=gpu -gpu=cc90 -Minfo=accel,opt,mp
+# CFLAGS = -O3 -mp=gpu -gpu=cc90 -Minfo=accel,opt,mp
 
 # CFLAGS = -O3 -mp=gpu -gpu=cc80 -Minfo=accel,opt,mp
 # CFLAGS = -fast -mp=gpu -gpu=cc80 -Minfo=accel,opt,mp # -fast = -O2 -Munroll=c:1 -Mlre -Mautoinline
 
-# CFLAGS = -O3 -ffp-contract=fast
+CFLAGS = -O3 -ffp-contract=fast
+CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
 # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx908
-# # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
 
 
 # CFLAGS = -v -O3 -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda \
@@ -60,11 +59,11 @@ LIBS=
 #CXX=clang++
 #CC=clang
 
-# CXX=amdclang++
-# CC=amdclang
+CXX=amdclang++
+CC=amdclang
 
-CXX=nvc++
-CC=nvc
+# CXX=nvc++
+# CC=nvc
 
 #CXX=xlC
 #CC=xlc

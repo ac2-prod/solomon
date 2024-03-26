@@ -13,18 +13,18 @@ MINIFE_MATRIX_TYPE = -DMINIFE_CSR_MATRIX
 
 #-----------------------------------------------------------------------
 
-CFLAGS = -O3 -mp=gpu -gpu=cc90 -Minfo=accel,opt,mp
-OFFLOAD_TYPE	= -DOFFLOAD_BY_OPENMP_TARGET
+# CFLAGS = -O3 -mp=gpu -gpu=cc90 -Minfo=accel,opt,mp
+# OFFLOAD_TYPE	= -DOFFLOAD_BY_OPENMP_TARGET
 # OFFLOAD_TYPE	+= -DOFFLOAD_BY_OPENMP_TARGET_DISTRIBUTE
 # CFLAGS = -O3 -mp=multicore -acc=gpu -gpu=cc90 -Minfo=accel,opt
 # OFFLOAD_TYPE	= -DOFFLOAD_BY_OPENACC
 # OFFLOAD_TYPE	+= -DOFFLOAD_BY_OPENACC_PARALLEL
 
-# CFLAGS = -O3 -ffp-contract=fast
+CFLAGS = -O3 -ffp-contract=fast
+CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
 # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx908
-# # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
-# OFFLOAD_TYPE	= -DOFFLOAD_BY_OPENMP_TARGET
-# OFFLOAD_TYPE	+= -DOFFLOAD_BY_OPENMP_TARGET_LOOP
+OFFLOAD_TYPE	= -DOFFLOAD_BY_OPENMP_TARGET
+OFFLOAD_TYPE	+= -DOFFLOAD_BY_OPENMP_TARGET_DISTRIBUTE
 
 
 # CFLAGS = -v -O3 -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda \
@@ -65,11 +65,11 @@ LIBS=
 #CXX=clang++
 #CC=clang
 
-# CXX=amdclang++
-# CC=amdclang
+CXX=amdclang++
+CC=amdclang
 
-CXX=nvc++
-CC=nvc
+# CXX=nvc++
+# CC=nvc
 
 #CXX=xlC
 #CC=xlc
