@@ -2,12 +2,13 @@
 #SBATCH -J bench
 #SBATCH -p share-batch
 #SBATCH --gres=gpu:1
-#SBATCH --time=24:00:00
+#SBATCH --time=01:00:00
 
 # load modules
 module purge
 module load cuda
 module list
+nvcc --version
 
 # set environmental variables for OpenMP
 # OMP_OPT_ENV="env OMP_DISPLAY_ENV=verbose OMP_PLACES=cores OMP_PROC_BIND=close" # for GCC or LLVM

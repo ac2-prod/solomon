@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH -J verify
+#SBATCH -J scaling
 #SBATCH -p share-batch
 #SBATCH --gres=gpu:1
-#SBATCH --time=02:00:00
+#SBATCH --time=24:00:00
 
 USE_NVHPC=1
 USE_AMDCLANG=0
@@ -13,6 +13,9 @@ if [ $(($USE_NVHPC + $USE_AMDCLANG + $USE_ICPX + $USE_ACPP)) != 1 ]; then
 	exit 1
 fi
 
+NUM_MIN=128
+NUM_MAX=4194304
+NUM_ITERATE=10
 GPU_ID=0
 
 # OpenMP target: loop/distribute, w/ or w/o dedicated options
@@ -57,7 +60,7 @@ cd $SLURM_SUBMIT_DIR
 TARGET=${COMPILER}_${VENDER}
 module list
 
-DUMP=verify
+DUMP=scaling
 mkdir -p "${DUMP}"
 
 for MODEL_ID in ${MODEL_ID_LIST[@]}
@@ -108,7 +111,7 @@ do
 
 	make dir
 	make clean
-	make all NVHPC=$USE_NVHPC AMDCLANG=$USE_AMDCLANG ICPX=$USE_ICPX ACPP=$USE_ACPP USE_OPENACC=$USE_OPENACC USE_ACC_PARALLEL=$USE_ACC_PARALLEL USE_OMP_DISTRIBUTE=$USE_OMP_DISTRIBUTE USE_FAST_MATH=$USE_FAST_MATH MODEL_ID=${MODEL_ID} NUM_THREADS=$THREADS GPU_ARCH=${ARCH} BENCHMARK=0
+	make all NVHPC=$USE_NVHPC AMDCLANG=$USE_AMDCLANG ICPX=$USE_ICPX ACPP=$USE_ACPP USE_OPENACC=$USE_OPENACC USE_ACC_PARALLEL=$USE_ACC_PARALLEL USE_OMP_DISTRIBUTE=$USE_OMP_DISTRIBUTE USE_FAST_MATH=$USE_FAST_MATH MODEL_ID=${MODEL_ID} NUM_THREADS=$THREADS GPU_ARCH=${ARCH} BENCHMARK=1 SET_NMIN=${NUM_MIN} SET_NMAX=${NUM_MAX}
 	APPEND=${COMPILER}_${ARCH}_model${MODEL_ID}_thrd${THREADS}
 	for TAG in nbody acc omp
 	do
@@ -119,13 +122,13 @@ do
 			mkdir -p ${DUMP}/model${MODEL_ID}/${TAG}
 			mkdir -p log dat fig
 			COMMAND="numactl --localalloc $EXEC"
-			echo ${COMMAND}
-			eval ${COMMAND}
+			for (( COUNTER = 0 ; COUNTER < ${NUM_ITERATE} ; COUNTER += 1 ))
+			do
+				echo ${COMMAND}
+				eval ${COMMAND}
+			done
 
-			gnuplot plt/error.gp
-			gnuplot plt/virial.gp
-			gnuplot plt/map.gp
-			mv --backup=numbered log dat fig ${DUMP}/model${MODEL_ID}/${TAG}
+			mv --backup=numbered log ${DUMP}/model${MODEL_ID}/${TAG}
 		fi
 	done
 	mv --backup=numbered bin ${DUMP}/model${MODEL_ID}

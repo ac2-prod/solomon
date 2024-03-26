@@ -7,6 +7,7 @@
 module purge
 module load rocm
 module list
+amdclang++ --version
 
 # set environmental variables for OpenMP
 # OMP_OPT_ENV="env OMP_DISPLAY_ENV=verbose OMP_PLACES=cores OMP_PROC_BIND=close" # for GCC or LLVM

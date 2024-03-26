@@ -32,6 +32,7 @@ MODEL_ID_LIST=(`seq $MIN_MODEL_ID $MAX_MODEL_ID`)
 . /usr/share/Modules/init/bash
 module purge
 # module use $HOME/opt/modules/compiler
+hostname
 
 # recipe for NVIDIA GPU
 module load cuda
@@ -41,7 +42,7 @@ ARCH=90
 MIN_THREADS=32
 MAX_THREADS=1024
 
-# recipe for CUDA
+# recipe for NVIDIA HPC SDK
 if [ $USE_NVHPC == 1 ]; then
 	COMPILER=nvhpc
 	module load nvidia
@@ -111,10 +112,10 @@ do
 done
 
 DUMP=survey
-mkdir -p ${DUMP}
+mkdir -p "${DUMP}"
 mv bin log ${DUMP}
 DEST=${TARGET}_${ARCH}
-mkdir -p ${DEST}
+mkdir -p "${DEST}"
 mv --backup=numbered ${DUMP} ${DEST}
 
 exit 0
