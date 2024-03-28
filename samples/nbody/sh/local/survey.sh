@@ -20,7 +20,7 @@ if [ $(($NVIDIA_GPU + $AMD_GPU + $INTEL_GPU)) != 1 ]; then
 fi
 
 NUM=2097152
-TIMEOUT=30s # 5 TFlop/s at N = 2M: ~20 s
+TIMEOUT=40s # 3 TFlop/s at N = 2M: ~40 s
 NUM_ITERATE=3
 GPU_ID=0
 
@@ -95,7 +95,7 @@ make dir
 
 THREADS_MIN=${MIN_THREADS}
 THREADS_MAX=${MAX_THREADS}
-for OPT_LEV in ${OPT_LEV_LIST[@]}
+for MODEL_ID in ${MODEL_ID_LIST[@]}
 do
 	USE_OPENACC=0
 	USE_ACC_PARALLEL=0

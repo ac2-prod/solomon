@@ -1,5 +1,7 @@
 # miscellaneous files
 *make.log
+typescript
 # directories for simulations
 *build/
 *bench/
+*debug/
