@@ -3,3 +3,7 @@ log/
 fig/
 dat/
 nvhpc_nvidia_90/
+amdclang_amd_gfx90a/
+# benchmark results for publication
+mercury/
+milan2/
