@@ -57,7 +57,7 @@ end
 
 using DataFrames
 using Statistics
-function read_results(file_list)
+function read_results(file_list, summary, GPU, lang)
     nx_list = []
     ny_list = []
     nz_list = []
@@ -78,9 +78,10 @@ function read_results(file_list)
         data = df[df.n3.==n3[ii], :]."CG"
         append!(max, maximum(data))
         append!(med, Statistics.median(data))
+        push!(summary, (GPU, lang, n3[ii], max[end], med[end], Statistics.mean(data), minimum(data), length(data)))
     end
 
-    return n3, max, med
+    return n3, max, med, summary
 end
 
 
@@ -109,6 +110,7 @@ using Parameters
 end
 
 using Glob
+using CSV
 function main()
     # read options
     argv = parse_cmd()
@@ -138,6 +140,9 @@ function main()
     min_of_max_speedup = typemax(Float32)
     min_of_med_speedup = typemax(Float32)
 
+    # prepare summary CSV file
+    summary = DataFrame(GPU=[], lang=[], NxNyNz=[], perf_max=[], perf_med=[], perf_avg=[], perf_min=[], trials=[])
+
     for gpu_id in 1:Ngpu
         root = gpu[gpu_id].root
         has_cuda = gpu[gpu_id].has_cuda
@@ -146,15 +151,15 @@ function main()
 
         # read measured performance
         if has_cuda
-            n3_cuda, perf_max_cuda, perf_med_cuda = read_results(glob(string(root, "/cuda/*.yaml")))
+            n3_cuda, perf_max_cuda, perf_med_cuda, summary = read_results(glob(string(root, "/cuda/*.yaml")), summary, gpu[gpu_id].caption, "CUDA (miniFE 2.2.0)")
             max_of_max_performance = max(max_of_max_performance, maximum(perf_max_cuda))
             max_of_med_performance = max(max_of_med_performance, maximum(perf_med_cuda))
             min_of_max_performance = min(min_of_max_performance, minimum(perf_max_cuda))
             min_of_med_performance = min(min_of_med_performance, minimum(perf_med_cuda))
         end
-        n3_omp_45opt, perf_max_omp_45opt, perf_med_omp_45opt = read_results(glob(string(root, "/openmp45-opt/*.yaml")))
-        n3_omp_dist, perf_max_omp_dist, perf_med_omp_dist = read_results(glob(string(root, "/omp_dist/*.yaml")))
-        n3_omp_loop, perf_max_omp_loop, perf_med_omp_loop = read_results(glob(string(root, "/omp_loop/*.yaml")))
+        n3_omp_45opt, perf_max_omp_45opt, perf_med_omp_45opt, summary = read_results(glob(string(root, "/openmp45-opt/*.yaml")), summary, gpu[gpu_id].caption, "omp (miniFE 2.2.0)")
+        n3_omp_dist, perf_max_omp_dist, perf_med_omp_dist, summary = read_results(glob(string(root, "/omp_dist/*.yaml")), summary, gpu[gpu_id].caption, "omp (distribute)")
+        n3_omp_loop, perf_max_omp_loop, perf_med_omp_loop, summary = read_results(glob(string(root, "/omp_loop/*.yaml")), summary, gpu[gpu_id].caption, "omp (loop)")
         max_of_max_performance = max(max_of_max_performance, maximum(perf_max_omp_45opt), maximum(perf_max_omp_dist), maximum(perf_max_omp_loop))
         max_of_med_performance = max(max_of_med_performance, maximum(perf_med_omp_45opt), maximum(perf_med_omp_dist), maximum(perf_med_omp_loop))
         min_of_max_performance = min(min_of_max_performance, minimum(perf_max_omp_45opt), minimum(perf_max_omp_dist), minimum(perf_max_omp_loop))
@@ -164,8 +169,8 @@ function main()
         min_of_max_speedup = min(min_of_max_speedup, minimum(perf_max_omp_dist ./ perf_max_omp_45opt), minimum(perf_max_omp_loop ./ perf_max_omp_45opt))
         min_of_med_speedup = min(min_of_med_speedup, minimum(perf_med_omp_dist ./ perf_med_omp_45opt), minimum(perf_med_omp_loop ./ perf_med_omp_45opt))
         if has_openacc
-            n3_acc_ker, perf_max_acc_ker, perf_med_acc_ker = read_results(glob(string(root, "/acc_ker/*.yaml")))
-            n3_acc_par, perf_max_acc_par, perf_med_acc_par = read_results(glob(string(root, "/acc_par/*.yaml")))
+            n3_acc_ker, perf_max_acc_ker, perf_med_acc_ker, summary = read_results(glob(string(root, "/acc_ker/*.yaml")), summary, gpu[gpu_id].caption, "acc (kernels)")
+            n3_acc_par, perf_max_acc_par, perf_med_acc_par, summary = read_results(glob(string(root, "/acc_par/*.yaml")), summary, gpu[gpu_id].caption, "acc (parallel)")
             max_of_max_performance = max(max_of_max_performance, maximum(perf_max_acc_ker), maximum(perf_max_acc_par))
             max_of_med_performance = max(max_of_med_performance, maximum(perf_med_acc_ker), maximum(perf_med_acc_par))
             min_of_max_performance = min(min_of_max_performance, minimum(perf_max_acc_ker), minimum(perf_max_acc_par))
@@ -287,6 +292,9 @@ function main()
         end
 
         # save figures
+        if !ispath("fig")
+            mkdir("fig")
+        end
         perf_max.fig.savefig(string("fig/", "miniFE", "_flops", "_max", "_", name, ".png"), format="png", dpi=100, bbox_inches="tight")
         perf_med.fig.savefig(string("fig/", "miniFE", "_flops", "_med", "_", name, ".png"), format="png", dpi=100, bbox_inches="tight")
         speedup_max.fig.savefig(string("fig/", "miniFE", "_ratio", "_max", "_", name, ".png"), format="png", dpi=100, bbox_inches="tight")
@@ -296,10 +304,10 @@ function main()
         if output_pdf
             perf_max.fig.savefig(string("fig/", "miniFE", "_flops", "_max", "_", name, ".pdf"), format="pdf", bbox_inches="tight")
             perf_med.fig.savefig(string("fig/", "miniFE", "_flops", "_med", "_", name, ".pdf"), format="pdf", bbox_inches="tight")
-            speedup_max.fig.savefig(string("fig/", "miniFE", "_ratio", "_max", "_", name, ".pdf"), bbox_inches="tight")
-            speedup_med.fig.savefig(string("fig/", "miniFE", "_ratio", "_med", "_", name, ".pdf"), bbox_inches="tight")
-            system_max.fig.savefig(string("fig/", "miniFE", "_max", "_", name, ".pdf"), bbox_inches="tight")
-            system_med.fig.savefig(string("fig/", "miniFE", "_med", "_", name, ".pdf"), bbox_inches="tight")
+            speedup_max.fig.savefig(string("fig/", "miniFE", "_ratio", "_max", "_", name, ".pdf"), format="pdf", bbox_inches="tight")
+            speedup_med.fig.savefig(string("fig/", "miniFE", "_ratio", "_med", "_", name, ".pdf"), format="pdf", bbox_inches="tight")
+            system_max.fig.savefig(string("fig/", "miniFE", "_max", "_", name, ".pdf"), format="pdf", bbox_inches="tight")
+            system_med.fig.savefig(string("fig/", "miniFE", "_med", "_", name, ".pdf"), format="pdf", bbox_inches="tight")
         end
 
         perf_max = nothing
@@ -310,6 +318,9 @@ function main()
         system_med = nothing
         # PyPlot.close("all")
     end
+
+    # output summary CSV file
+    summary |> CSV.write(string("miniFE", "_stats", ".csv"), delim=',', writeheader=true)
 
     for at in compare_max.ax
         at.set_ylim(util_pyplot.scale_axis(min_of_max_performance, max_of_max_performance, logPlt=false))
@@ -407,6 +418,12 @@ function main()
         compare_system_med.fig.savefig(string("fig/", "miniFE", "_med", ".pdf"), bbox_inches="tight")
     end
 
+    compare_max = nothing
+    compare_med = nothing
+    compare_speedup_max = nothing
+    compare_speedup_med = nothing
+    compare_system_max = nothing
+    compare_system_med = nothing
     PyPlot.close("all")
     return nothing
 end

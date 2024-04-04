@@ -7,3 +7,4 @@ amdclang_amd_gfx90a/
 # benchmark results for publication
 mercury/
 milan2/
+nbody_stats.csv
