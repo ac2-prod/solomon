@@ -21,37 +21,34 @@ function get_performance_log(file::String)
     result = read_csv(file)
 
     num = result."N"
-    time = result."time(s)"
     perf = result."N_pairs/s"
 
-    return num, time, perf
+    return num, perf
 end
 
 using DataFrames
 using Statistics
 function read_results(file_list, summary, GPU, lang, flag)
     num_list = []
-    time_list = []
     perf_list = []
     for file in file_list
-        num, time, perf = get_performance_log(file)
+        num, perf = get_performance_log(file)
         append!(num_list, num)
-        append!(time_list, time)
         append!(perf_list, perf)
     end
-    df = DataFrame(num=num_list, time=time_list, perf=perf_list)
+    df = DataFrame(num=num_list, perf=perf_list)
 
     num = sort(unique(df.num))
-    max = []
-    med = []
+    perf_max = []
+    perf_med = []
     for ii = eachindex(num)
         data = df[df.num.==num[ii], :]."perf"
-        append!(max, maximum(data))
-        append!(med, Statistics.median(data))
-        push!(summary, (GPU, lang, flag, num[ii], max[end], med[end], Statistics.mean(data), minimum(data), length(data)))
+        append!(perf_max, maximum(data))
+        append!(perf_med, Statistics.median(data))
+        push!(summary, (GPU, lang, flag, num[ii], perf_max[end], perf_med[end], Statistics.mean(data), minimum(data), length(data)))
     end
 
-    return num, max, med, summary
+    return num, perf_max, perf_med, summary
 end
 
 
