@@ -4,16 +4,16 @@
 # set -o pipefail
 
 USE_NVHPC=0
-USE_AMDCLANG=1
-USE_ICPX=0
+USE_AMDCLANG=0
+USE_ICPX=1
 USE_ACPP=0
 if [ $(($USE_NVHPC + $USE_AMDCLANG + $USE_ICPX + $USE_ACPP)) != 1 ]; then
 	echo "Only one compiler can be activated: USE_NVHPC, USE_AMDCLANG, USE_ICPX, and USE_ACPP"
 	exit 1
 fi
 NVIDIA_GPU=0
-AMD_GPU=1
-INTEL_GPU=0
+AMD_GPU=0
+INTEL_GPU=1
 if [ $(($NVIDIA_GPU + $AMD_GPU + $INTEL_GPU)) != 1 ]; then
 	echo "Only one vendor can be activated: NVIDIA, AMD, and Intel"
 	exit 1
@@ -53,6 +53,12 @@ if [ $AMD_GPU == 1 ]; then
 	ARCH=gfx90a
 fi
 
+# recipe for Intel GPU
+if [ $INTEL_GPU == 1 ]; then
+	VENDER=intel
+	ARCH=pvc
+fi
+
 # recipe for NVIDIA HPC SDK
 if [ $USE_NVHPC == 1 ]; then
 	COMPILER=nvhpc
@@ -68,6 +74,13 @@ if [ $USE_AMDCLANG == 1 ]; then
 	amdclang++ --version
 fi
 
+# recipe for Intel oneAPI
+if [ $USE_ICPX == 1 ]; then
+	COMPILER=icpx
+	module load intel
+	icpx --version
+fi
+
 module load boost
 
 # NUMA configuration
@@ -79,6 +92,10 @@ if [ $VENDER == nvidia ]; then
 	export CUDA_VISIBLE_DEVICES=$GPU_ID
 	BUS_ID=`nvidia-smi --format=csv,noheader --query-gpu=gpu_bus_id -i $GPU_ID | awk -F ":" '{print "0000:" $2 ":" $3}' | tr '[:upper:]' '[:lower:]'`
 	NUMA_NODE=`cat /sys/bus/pci/devices/$BUS_ID/numa_node`
+fi
+if [ $VENDER == intel ]; then
+        # tentative treatment for spr2
+        NUMA_NODE=0
 fi
 if [ "${NUMA_NODE}" == "" ]; then
 	AVAILABLE_NUMA_NODE=`LANG=C numactl --show | sed -n 's/^nodebind: *//p'`
@@ -152,6 +169,21 @@ do
 		fi
 	fi
 
+	if [ $USE_ICPX == 1 ]; then
+		if [ $MODEL_ID -eq 0 ] ; then
+			THREADS=512
+		fi
+		if [ $MODEL_ID -eq 1 ] ; then
+			THREADS=512
+		fi
+		if [ $MODEL_ID -eq 2 ] ; then
+			THREADS=512
+		fi
+		if [ $MODEL_ID -eq 3 ] ; then
+			THREADS=512
+		fi
+	fi
+
 	make dir
 	make clean
 	make all NVHPC=$USE_NVHPC AMDCLANG=$USE_AMDCLANG ICPX=$USE_ICPX ACPP=$USE_ACPP USE_OPENACC=$USE_OPENACC USE_ACC_PARALLEL=$USE_ACC_PARALLEL USE_OMP_DISTRIBUTE=$USE_OMP_DISTRIBUTE USE_FAST_MATH=$USE_FAST_MATH MODEL_ID=${MODEL_ID} NUM_THREADS=$THREADS GPU_ARCH=${ARCH} BENCHMARK=1 SET_NMIN=${NUM_MIN} SET_NMAX=${NUM_MAX}
@@ -162,7 +194,6 @@ do
 		EXEC=${BIN}_${APPEND}
 		mv ${BIN} $EXEC
 		if [ -e $EXEC ]; then
-			mkdir -p ${DUMP}/model${MODEL_ID}/${TAG}
 			mkdir -p log dat fig
 			COMMAND="numactl --cpunodebind=$NUMA_NODE --localalloc $EXEC"
 			for (( COUNTER = 0 ; COUNTER < ${NUM_ITERATE} ; COUNTER += 1 ))
@@ -171,6 +202,7 @@ do
 				eval ${COMMAND}
 			done
 
+			mkdir -p ${DUMP}/model${MODEL_ID}/${TAG}
 			mv --backup=numbered log ${DUMP}/model${MODEL_ID}/${TAG}
 		fi
 	done

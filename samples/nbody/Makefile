@@ -17,8 +17,8 @@ MODEL_ID	:= 0
 
 DEBUG_MODE	:= 0
 NVHPC	:= 0
-AMDCLANG	:= 1
-ICPX	:= 0
+AMDCLANG	:= 0
+ICPX	:= 1
 ACPP	:= 0
 
 BENCHMARK	:= 0
@@ -26,11 +26,11 @@ SET_NMIN	:= 0
 SET_NMAX	:= 0
 SET_NCRIT	:= 0
 
-# GPU_ARCH	:= pvc # Intel PVC
+GPU_ARCH	:= pvc # Intel PVC
 # GPU_ARCH	:= 80 # NVIDIA A100
 # GPU_ARCH	:= 90 # NVIDIA H100
 # GPU_ARCH	:= gfx908 # CDNA 1 GPU (MI100)
-GPU_ARCH	:= gfx90a # CDNA 2 GPUs (MI210, MI250, MI250X)
+# GPU_ARCH	:= gfx90a # CDNA 2 GPUs (MI210, MI250, MI250X)
 
 # option(s)
 STD	:= --std=c++17
@@ -50,15 +50,15 @@ else
 	endif
 	ARGS_NVC	:= -mp=gpu -Minfo=accel,opt,mp
 	ARGS_AMD	:= -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=$(GPU_ARCH)
-	# ARGS_ICPX	:= -fiopenmp -fopenmp-targets=amdgcn-amd-amdhsa
+	ARGS_ICPX	:= -fiopenmp -fopenmp-targets=spir64_gen -Xs "-device $(GPU_ARCH)" # -Xs "-device pvc" is for Ahead-of-Time compilation
 endif
 ARGS_AMD	+= -funroll-loops
-# ARGS_ICPX	+= -funroll-loops
+ARGS_ICPX	+= -funroll-loops
 ifeq ($(USE_FAST_MATH), 1)
 	# ARGS_NVC	+= -Mfprelaxed=rsqrt
 	ARGS_NVC	+= -Mfprelaxed=rsqrt -gpu=cc$(GPU_ARCH),fastmath
 	ARGS_AMD	+= -ffast-math -ffp-contract=fast
-	# ARGS_ICPX	+= -ffast-math -ffp-contract=fast
+	ARGS_ICPX	+= -ffast-math -ffp-contract=fast
 else
 	ARGS_NVC	+= -gpu=cc$(GPU_ARCH)
 endif
@@ -70,16 +70,14 @@ else
 	ifeq ($(AMDCLANG), 1)
 		CXX	:= amdclang++
 		ARGS	+= $(ARGS_AMD)
-	# else
-	# 	ifeq ($(ICPX), 1)
-	# 		CXX	:= icpx
-	# 		ARGS	+= $(ARGS_ICPX)
-	# 	endif
+	else
+		ifeq ($(ICPX), 1)
+			CXX	:= icpx
+			ARGS	+= $(ARGS_ICPX)
+		endif
 	endif
 endif
 PARAM	+= -DCOMPILER="\"$(CXX)\"" -DMODEL_ID="($(MODEL_ID))"
-# DPC	:= icpx
-# ACP	:= acpp
 
 ifeq ($(BENCHMARK), 1)
 PARAM	+= -DBENCHMARK_MODE

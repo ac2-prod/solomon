@@ -4,16 +4,16 @@
 # set -o pipefail
 
 USE_NVHPC=0
-USE_AMDCLANG=1
-USE_ICPX=0
+USE_AMDCLANG=0
+USE_ICPX=1
 USE_ACPP=0
 if [ $(($USE_NVHPC + $USE_AMDCLANG + $USE_ICPX + $USE_ACPP)) != 1 ]; then
 	echo "Only one compiler can be activated: USE_NVHPC, USE_AMDCLANG, USE_ICPX, and USE_ACPP"
 	exit 1
 fi
 NVIDIA_GPU=0
-AMD_GPU=1
-INTEL_GPU=0
+AMD_GPU=0
+INTEL_GPU=1
 if [ $(($NVIDIA_GPU + $AMD_GPU + $INTEL_GPU)) != 1 ]; then
 	echo "Only one vendor can be activated: NVIDIA, AMD, and Intel"
 	exit 1
@@ -57,6 +57,14 @@ if [ $AMD_GPU == 1 ]; then
 	MAX_THREADS=1024
 fi
 
+# recipe for Intel GPU
+if [ $INTEL_GPU == 1 ]; then
+	VENDER=intel
+	ARCH=pvc
+	MIN_THREADS=16
+	MAX_THREADS=1024
+fi
+
 # recipe for NVIDIA HPC SDK
 if [ $USE_NVHPC == 1 ]; then
 	COMPILER=nvhpc
@@ -72,6 +80,13 @@ if [ $USE_AMDCLANG == 1 ]; then
 	amdclang++ --version
 fi
 
+# recipe for Intel oneAPI
+if [ $USE_ICPX == 1 ]; then
+	COMPILER=icpx
+	module load intel
+	icpx --version
+fi
+
 module load boost
 
 # NUMA configuration
@@ -83,6 +98,10 @@ if [ $VENDER == nvidia ]; then
 	export CUDA_VISIBLE_DEVICES=$GPU_ID
 	BUS_ID=`nvidia-smi --format=csv,noheader --query-gpu=gpu_bus_id -i $GPU_ID | awk -F ":" '{print "0000:" $2 ":" $3}' | tr '[:upper:]' '[:lower:]'`
 	NUMA_NODE=`cat /sys/bus/pci/devices/$BUS_ID/numa_node`
+fi
+if [ $VENDER == intel ]; then
+        # tentative treatment for spr2
+        NUMA_NODE=0
 fi
 if [ "${NUMA_NODE}" == "" ]; then
 	AVAILABLE_NUMA_NODE=`LANG=C numactl --show | sed -n 's/^nodebind: *//p'`
