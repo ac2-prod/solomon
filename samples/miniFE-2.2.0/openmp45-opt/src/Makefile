@@ -18,8 +18,9 @@ MINIFE_MATRIX_TYPE = -DMINIFE_CSR_MATRIX
 # CFLAGS = -fast -mp=gpu -gpu=cc80 -Minfo=accel,opt,mp # -fast = -O2 -Munroll=c:1 -Mlre -Mautoinline
 
 CFLAGS = -O3 -ffp-contract=fast
-CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
+# CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
 # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx908
+CFLAGS += -fiopenmp -fopenmp-targets=spir64_gen -Xs '-device pvc'
 
 
 # CFLAGS = -v -O3 -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda \
@@ -59,11 +60,14 @@ LIBS=
 #CXX=clang++
 #CC=clang
 
-CXX=amdclang++
-CC=amdclang
+# CXX=amdclang++
+# CC=amdclang
 
 # CXX=nvc++
 # CC=nvc
+
+CXX=icpx
+CC=icx
 
 #CXX=xlC
 #CC=xlc

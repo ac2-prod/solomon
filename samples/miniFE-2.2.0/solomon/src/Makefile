@@ -21,8 +21,9 @@ MINIFE_MATRIX_TYPE = -DMINIFE_CSR_MATRIX
 # OFFLOAD_TYPE	+= -DOFFLOAD_BY_OPENACC_PARALLEL
 
 CFLAGS = -O3 -ffp-contract=fast
-CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
+# CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
 # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx908
+CFLAGS += -fiopenmp -fopenmp-targets=spir64_gen -Xs '-device pvc'
 OFFLOAD_TYPE	= -DOFFLOAD_BY_OPENMP_TARGET
 OFFLOAD_TYPE	+= -DOFFLOAD_BY_OPENMP_TARGET_DISTRIBUTE
 
@@ -65,11 +66,14 @@ LIBS=
 #CXX=clang++
 #CC=clang
 
-CXX=amdclang++
-CC=amdclang
+# CXX=amdclang++
+# CC=amdclang
 
 # CXX=nvc++
 # CC=nvc
+
+CXX=icpx
+CC=icx
 
 #CXX=xlC
 #CC=xlc
