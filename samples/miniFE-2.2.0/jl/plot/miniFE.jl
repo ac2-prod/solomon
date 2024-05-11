@@ -122,7 +122,7 @@ function main()
     Ngpu = 3
     gpu = Array{gpu_config,1}(undef, Ngpu)
     gpu[1] = gpu_config(name="h100sxm", root="mercury/h100sxm", has_cuda=true, has_openacc=true, caption="NVIDIA H100 SXM 80GB")
-    gpu[2] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD MI210")
+    gpu[2] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD Instinct MI210")
     gpu[3] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel DC GPU Max 1100")
 
     compare_max = util_pyplot.set_Panel(nx=Ngpu)
