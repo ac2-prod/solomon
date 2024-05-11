@@ -119,10 +119,11 @@ function main()
     # initialize matplotlib
     util_pyplot.config()
 
-    Ngpu = 2
+    Ngpu = 3
     gpu = Array{gpu_config,1}(undef, Ngpu)
     gpu[1] = gpu_config(name="h100sxm", root="mercury/h100sxm", has_cuda=true, has_openacc=true, caption="NVIDIA H100 SXM 80GB")
     gpu[2] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD MI210")
+    gpu[3] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel DC GPU Max 1100")
 
     compare_max = util_pyplot.set_Panel(nx=Ngpu)
     compare_med = util_pyplot.set_Panel(nx=Ngpu)
@@ -248,7 +249,7 @@ function main()
             set_ylabel(fig, fig.ax[begin], L"\unit{GFlop/s}")
         end
         for fig in [speedup_max, speedup_med]
-            set_ylabel(fig, fig.ax[begin], "Ratio from omp (miniFE 2.2.0)")
+            set_ylabel(fig, fig.ax[begin], "Ratio to omp (miniFE 2.2.0)")
         end
 
         for fig in [system_max, system_med]
@@ -260,7 +261,7 @@ function main()
             end
             set_xlabel(fig, fig.ax[begin, begin], L"$N_x N_y N_z$")
             set_ylabel(fig, fig.ax[begin, end], L"\unit{GFlop/s}")
-            set_ylabel(fig, fig.ax[begin, begin], "Ratio from omp (miniFE 2.2.0)")
+            set_ylabel(fig, fig.ax[begin, begin], "Ratio to omp (miniFE 2.2.0)")
         end
 
         # set label
@@ -310,13 +311,18 @@ function main()
             system_med.fig.savefig(string("fig/", "miniFE", "_med", "_", name, ".pdf"), format="pdf", bbox_inches="tight")
         end
 
+        PyPlot.close(perf_max.fig)
+        PyPlot.close(perf_med.fig)
+        PyPlot.close(speedup_max.fig)
+        PyPlot.close(speedup_med.fig)
+        PyPlot.close(system_max.fig)
+        PyPlot.close(system_med.fig)
         perf_max = nothing
         perf_med = nothing
         speedup_max = nothing
         speedup_med = nothing
         system_max = nothing
         system_med = nothing
-        # PyPlot.close("all")
     end
 
     # output summary CSV file
@@ -347,7 +353,7 @@ function main()
         set_ylabel(fig, fig.ax[begin], L"\unit{GFlop/s}")
     end
     for fig in [compare_speedup_max, compare_speedup_med]
-        set_ylabel(fig, fig.ax[begin], "Ratio from omp (miniFE 2.2.0)")
+        set_ylabel(fig, fig.ax[begin], "Ratio to omp (miniFE 2.2.0)")
     end
     for fig in [compare_max, compare_med, compare_speedup_max, compare_speedup_med]
         for ii in 1:fig.nx
@@ -381,7 +387,7 @@ function main()
             set_xlabel(fig, at, L"$N_x N_y N_z$")
         end
         set_ylabel(fig, fig.ax[begin, end], L"\unit{GFlop/s}")
-        set_ylabel(fig, fig.ax[begin, begin], "Ratio from omp (miniFE 2.2.0)")
+        set_ylabel(fig, fig.ax[begin, begin], "Ratio to omp (miniFE 2.2.0)")
 
         for ii in 1:fig.nx
             for jj in 1:fig.ny

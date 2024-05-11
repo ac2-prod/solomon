@@ -71,7 +71,7 @@ function set_Panel(; nx::Integer=1, ny::Integer=1, share_xaxis::Bool=true, share
     end
 
     # set default symbols
-    pt = MyPlotType(num=5, type=["o", "s", "^", "D", "x"])
+    pt = MyPlotType(num=11, type=["o", "s", "^", "D", "v", "+", "x", "*", "h", "p", "."])
     ls = MyPlotType(num=5, type=["solid", (0, (1, 1)), (0, (5, 5)), (0, (5, 1, 1, 1)), (0, (5, 1, 1, 1, 1, 1, 1, 1))])
     cl = MyPlotType(num=10,
         # taken from Model Color Palette for Color Universal Design ver.4 (pages 7 and 2)
