@@ -168,16 +168,16 @@ do
 
 	if [ $USE_ICPX == 1 ]; then
 		if [ $MODEL_ID -eq 0 ] ; then
-			THREADS=512
+			THREADS=32
 		fi
 		if [ $MODEL_ID -eq 1 ] ; then
-			THREADS=512
+			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 2 ] ; then
-			THREADS=512
+			THREADS=32
 		fi
 		if [ $MODEL_ID -eq 3 ] ; then
-			THREADS=512
+			THREADS=256
 		fi
 	fi
 

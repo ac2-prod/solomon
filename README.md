@@ -1,10 +1,16 @@
-# Solomon: Simple Off-LOading Macros realizing ONe-stop implementation for switching multiple kinds of accelerator directives
+# Solomon: Simple Off-LOading Macros Orchestrating multiple Notations
 
 ## Summary
 
-* OpenACC, OpenMP
+* Preprocessor macros to switch OpenACC and OpenMP target directives
 * Released under the MIT license, see LICENSE.txt
 * Copyright (c) 2024 Yohei MIKI
+
+## How to use
+
+### How to insert directives
+
+### How to add clauses and/or lists
 
 ## How to compile
 
@@ -12,7 +18,7 @@
 
 ### nbody: sample of compute-intensive application
 
-* Collisionless N-body simulation based on direct method
+* Collisionless $N$-body simulation based on direct method
 
 ### [miniFE](https://github.com/Mantevo/miniFE): sample of memory-intensive application
 
@@ -26,3 +32,7 @@
   * openmp45-opt: as is
   * solomon: forked example from openmp45-opt
     * `#pragma omp target` directives are replaced into corresponding directives in Solomon
+
+## memo
+
+* Unified Schemes for directive based offloading: Urry & Padovani (1995, PASP, 107, 803: Unified Schemes for Radio-Loud Active Galactic Nuclei)

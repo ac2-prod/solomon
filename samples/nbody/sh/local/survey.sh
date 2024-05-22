@@ -4,16 +4,16 @@
 # set -o pipefail
 
 USE_NVHPC=0
-USE_AMDCLANG=1
-USE_ICPX=0
+USE_AMDCLANG=0
+USE_ICPX=1
 USE_ACPP=0
 if [ $(($USE_NVHPC + $USE_AMDCLANG + $USE_ICPX + $USE_ACPP)) != 1 ]; then
 	echo "Only one compiler can be activated: USE_NVHPC, USE_AMDCLANG, USE_ICPX, and USE_ACPP"
 	exit 1
 fi
 NVIDIA_GPU=0
-AMD_GPU=1
-INTEL_GPU=0
+AMD_GPU=0
+INTEL_GPU=1
 if [ $(($NVIDIA_GPU + $AMD_GPU + $INTEL_GPU)) != 1 ]; then
 	echo "Only one vendor can be activated: NVIDIA, AMD, and Intel"
 	exit 1
