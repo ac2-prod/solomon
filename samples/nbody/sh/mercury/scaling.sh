@@ -84,16 +84,16 @@ do
 
 	if [ $USE_NVHPC == 1 ]; then
 		if [ $MODEL_ID -eq 0 ] ; then
-			THREADS=64
+			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 1 ] ; then
-			THREADS=64
+			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 2 ] ; then
-			THREADS=128
+			THREADS=1024
 		fi
 		if [ $MODEL_ID -eq 3 ] ; then
-			THREADS=128
+			THREADS=1024
 		fi
 		if [ $MODEL_ID -eq 4 ] ; then
 			THREADS=128
@@ -102,10 +102,10 @@ do
 			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 6 ] ; then
-			THREADS=64
+			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 7 ] ; then
-			THREADS=64
+			THREADS=128
 		fi
 	fi
 
