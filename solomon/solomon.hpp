@@ -1,5 +1,5 @@
 ///
-/// @file solomon/offload.hpp
+/// @file solomon/solomon.hpp
 /// @author Yohei MIKI (The University of Tokyo)
 /// @brief pragmas to offload operations by directives
 ///
@@ -7,8 +7,8 @@
 ///
 /// The MIT License is applied to this software, see LICENSE.txt
 ///
-#if !defined(SOLOMON_OFFLOAD_HPP)
-#define SOLOMON_OFFLOAD_HPP
+#if !defined(SOLOMON_SOLOMON_HPP)
+#define SOLOMON_SOLOMON_HPP
 
 // OpenMP for multicore CPU is always available
 #if defined(_OPENMP)
@@ -218,4 +218,4 @@
 ///
 #define COPY_D2H_AFTER_EXEC(...) ACC_CLAUSE_COPYOUT(__VA_ARGS__)
 
-#endif  // !defined(SOLOMON_OFFLOAD_HPP)
+#endif  // !defined(SOLOMON_SOLOMON_HPP)

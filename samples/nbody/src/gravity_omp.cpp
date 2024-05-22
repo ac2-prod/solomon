@@ -8,7 +8,7 @@
 /// The MIT License is applied to this software, see LICENSE.txt
 ///
 #include <cmath>
-#include <solomon/offload.hpp>
+#include <solomon.hpp>
 #include <type_traits>
 
 #include "common.hpp"

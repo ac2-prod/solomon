@@ -39,7 +39,7 @@
 #include <fstream>
 #include <mytimer.hpp>
 #include <set>
-#include <solomon/offload.hpp>
+#include <solomon.hpp>
 #include <sstream>
 #include <vector>
 

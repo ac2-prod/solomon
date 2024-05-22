@@ -35,7 +35,8 @@ GPU_ARCH	:= pvc # Intel PVC
 # option(s)
 STD	:= --std=c++17
 FLAG	:= -Wall -Wextra -Wunused -Wcast-qual -Wcast-align
-ARGS	:= -O3
+# ARGS	:= -O3
+ARGS	:= -Ofast
 
 ifeq ($(USE_OPENACC), 1)
 	PARAM	+= -DOFFLOAD_BY_OPENACC
@@ -57,8 +58,8 @@ ARGS_ICPX	+= -funroll-loops
 ifeq ($(USE_FAST_MATH), 1)
 	# ARGS_NVC	+= -Mfprelaxed=rsqrt
 	ARGS_NVC	+= -Mfprelaxed=rsqrt -gpu=cc$(GPU_ARCH),fastmath
-	ARGS_AMD	+= -ffast-math -ffp-contract=fast
-	ARGS_ICPX	+= -ffast-math -ffp-contract=fast
+	ARGS_AMD	+= -mfma -ffp-contract=fast
+	ARGS_ICPX	+= -mfma -ffp-contract=fast
 else
 	ARGS_NVC	+= -gpu=cc$(GPU_ARCH)
 endif
@@ -92,7 +93,7 @@ PARAM	+= -DNCRIT="($(SET_NCRIT))"
 endif
 endif
 
-INC	:= -I../..
+INC	:= -I../../solomon
 INC	+= -isystem=$(BOOST_INC)
 # LIB	+= -L$(BOOST_LIB) #-lboost_filesystem
 

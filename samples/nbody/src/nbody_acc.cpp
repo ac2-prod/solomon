@@ -13,7 +13,7 @@
 #include <unistd.h>
 
 #include <cmath>
-#include <solomon/offload.hpp>
+#include <solomon.hpp>
 #include <type_traits>
 
 #include "allocate.hpp"

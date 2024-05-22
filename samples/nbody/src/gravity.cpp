@@ -10,7 +10,7 @@
 #include "gravity.hpp"
 
 #include <cmath>
-#include <solomon/offload.hpp>
+#include <solomon.hpp>
 #include <type_traits>
 
 #include "common.hpp"

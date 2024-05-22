@@ -42,7 +42,7 @@
 
 #include <TypeTraits.hpp>
 #include <Vector.hpp>
-#include <solomon/offload.hpp>
+#include <solomon.hpp>
 
 #define MINIFE_MIN(X, Y) ((X) < (Y) ? (X) : (Y))
 

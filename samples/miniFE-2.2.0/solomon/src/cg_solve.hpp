@@ -33,7 +33,7 @@
 #include <limits>
 #include <mytimer.hpp>
 #include <outstream.hpp>
-#include <solomon/offload.hpp>
+#include <solomon.hpp>
 
 namespace miniFE {
 

@@ -42,7 +42,7 @@ OFFLOAD_TYPE	+= -DOFFLOAD_BY_OPENMP_TARGET_DISTRIBUTE
 
 CXXFLAGS = $(CFLAGS)
 
-CPPFLAGS = -I. -I../utils -I../fem -I../../../.. $(MINIFE_TYPES) \
+CPPFLAGS = -I. -I../utils -I../fem -I../../../../solomon $(MINIFE_TYPES) \
 	$(MINIFE_MATRIX_TYPE) \
 	$(OFFLOAD_TYPE) #\
 #	-DHAVE_MPI -DMPICH_IGNORE_CXX_SEEK \
