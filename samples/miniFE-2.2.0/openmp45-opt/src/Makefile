@@ -12,12 +12,12 @@ MINIFE_MATRIX_TYPE = -DMINIFE_CSR_MATRIX
 
 #-----------------------------------------------------------------------
 
-# CFLAGS = -O3 -mp=gpu -gpu=cc90 -Minfo=accel,opt,mp
+# CFLAGS = -O3
+# CFLAGS += -ffp-contract=fast
+CFLAGS = -Ofast
 
-# CFLAGS = -O3 -mp=gpu -gpu=cc80 -Minfo=accel,opt,mp
-# CFLAGS = -fast -mp=gpu -gpu=cc80 -Minfo=accel,opt,mp # -fast = -O2 -Munroll=c:1 -Mlre -Mautoinline
-
-CFLAGS = -O3 -ffp-contract=fast
+# CFLAGS += -mp=gpu -gpu=cc90 -Minfo=accel,opt,mp
+# CFLAGS += -mp=gpu -gpu=cc80 -Minfo=accel,opt,mp
 # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx90a
 # CFLAGS += -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=gfx908
 CFLAGS += -fiopenmp -fopenmp-targets=spir64_gen -Xs '-device pvc'

@@ -29,7 +29,8 @@
     * `MINFE_MATRIX_TYPE` is set as `-DMINFE_CSR_MATRIX` instead of `-DMINFE_ELL_MATRIX` to adopt the same scheme with the OpenMP target implementations
   * kokkos: as is
   * openmp45: as is
-  * openmp45-opt: as is
+  * openmp45-opt/
+    * use `-Ofast` instead of `-O3`
   * solomon: forked example from openmp45-opt
     * `#pragma omp target` directives are replaced into corresponding directives in Solomon
 
