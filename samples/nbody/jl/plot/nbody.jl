@@ -101,11 +101,12 @@ function main()
     # initialize matplotlib
     util_pyplot.config()
 
-    Ngpu = 3
+    Ngpu = 4
     gpu = Array{gpu_config,1}(undef, Ngpu)
     gpu[1] = gpu_config(name="h100sxm", root="mercury/h100sxm", has_openacc=true, caption="NVIDIA H100 SXM 80GB", num_cores=128 * 132, best_env_label="SYCL (icpx)")
-    gpu[2] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD Instinct MI210", num_cores=64 * 104, best_env_label="HIP (packed FP32)")
-    gpu[3] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel DC GPU Max 1100", num_cores=16 * 448, best_env_label="SYCL (icpx)")
+    gpu[2] = gpu_config(name="gh200", root="mercury/gh200", has_openacc=true, caption="NVIDIA GH100 480GB", num_cores=128 * 132, best_env_label="CUDA")
+    gpu[3] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD Instinct MI210", num_cores=64 * 104, best_env_label="HIP (packed FP32)")
+    gpu[4] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel DC GPU Max 1100", num_cores=16 * 448, best_env_label="SYCL (icpx)")
 
     ny = compare ? 2 : 1
 
