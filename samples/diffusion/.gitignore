@@ -1,0 +1,4 @@
+old/
+*_nvhpc_nvidia_90/
+*_amdclang_amd_gfx90a/
+# benchmark results for publication

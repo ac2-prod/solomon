@@ -3,6 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <solomon.hpp>
 
@@ -21,16 +22,16 @@ int main(int argc, char *argv[]) {
   const int nz = ny;
   const int n = nx * ny * nz;
 
-  const float lx = 1.0;
-  const float ly = 1.0;
-  const float lz = 1.0;
+  const float lx = 1.0F;
+  const float ly = 1.0F;
+  const float lz = 1.0F;
 
   const float dx = lx / (float)nx;
   const float dy = ly / (float)ny;
   const float dz = lz / (float)nz;
 
-  const float kappa = 0.1;
-  const float dt = 0.1 * fmin(fmin(dx * dx, dy * dy), dz * dz) / kappa;
+  const float kappa = 0.1F;
+  const float dt = 0.1F * fminf(fminf(dx * dx, dy * dy), dz * dz) / kappa;
 
   const int nt = 100000;
   double time = 0.0;
@@ -40,6 +41,15 @@ int main(int argc, char *argv[]) {
 
   float *f = (float *)malloc(sizeof(float) * n);
   float *fn = (float *)malloc(sizeof(float) * n);
+
+#if defined(APPLY_FIRST_TOUCH)
+  // first touch
+  OFFLOAD()
+  for (int ii = 0; ii < n; ii++) {
+    f[ii] = 0.0F;
+    fn[ii] = 0.0F;
+  }
+#endif  // defined(APPLY_FIRST_TOUCH)
 
   init(nx, ny, nz, dx, dy, dz, f);
 
@@ -64,6 +74,31 @@ int main(int argc, char *argv[]) {
 
   const double ferr = accuracy(time, nx, ny, nz, dx, dy, dz, kappa, f);
   fprintf(stdout, "Error[%d][%d][%d] = %10.6e\n", nx, ny, nz, ferr);
+
+  char filename[64];
+  sprintf(filename, "diffusion_benchmark_%s%d.csv", COMPILER, MODEL_ID);
+  FILE *fp;
+  if (access(filename, F_OK) == 0) {
+    fp = fopen(filename, "a");
+    if (fp == NULL) {
+      fprintf(stderr, "ERROR: failed to open \"%s\"\n", filename);
+      exit(1);
+    }
+  } else {
+    fp = fopen(filename, "w");
+    if (fp == NULL) {
+      fprintf(stderr, "ERROR: failed to open \"%s\"\n", filename);
+      exit(1);
+    }
+    fprintf(fp, "Model_ID");
+    fprintf(fp, ",nx,ny,nz");
+    fprintf(fp, ",time[s],Flops,Flop/s,error\n");
+  }
+  fprintf(fp, "%d", MODEL_ID);
+  fprintf(fp, ",%d", nx);
+  fprintf(fp, ",%d", ny);
+  fprintf(fp, ",%d", nz);
+  fprintf(fp, ",%e,%e,%e,%e\n", elapsed_time, flop, flop / elapsed_time, ferr);
 
   free(f);
   f = NULL;

@@ -6,7 +6,7 @@
 #include <solomon.hpp>
 
 double diffusion3d(int nx, int ny, int nz, float dx, float dy, float dz, float dt, float kappa,
-                   const float *f, float *fn) {
+                   const float *restrict f, float *restrict fn) {
   const float ce = kappa * dt / (dx * dx);
   const float cw = ce;
   const float cn = kappa * dt / (dy * dy);
@@ -16,7 +16,7 @@ double diffusion3d(int nx, int ny, int nz, float dx, float dy, float dz, float d
 
   const float cc = 1.0 - (ce + cw + cn + cs + ct + cb);
 
-  OFFLOAD(COLLAPSE(3), ACC_CLAUSE_PRESENT(f, fn))
+  OFFLOAD(COLLAPSE(3), AS_INDEPENDENT, ACC_CLAUSE_PRESENT(f, fn))
   for (int k = 0; k < nz; k++) {
     for (int j = 0; j < ny; j++) {
       for (int i = 0; i < nx; i++) {

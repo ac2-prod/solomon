@@ -16,6 +16,8 @@ ICPX	:= 0
 USE_MANAGED	:= 0
 USE_UNIFIED	:= 0
 
+APPLY_FIRST_TOUCH	:= 0
+
 ifeq ($(USE_OPENACC), 1)
 	PARAM	+= -DOFFLOAD_BY_OPENACC
 	ifeq ($(USE_ACC_PARALLEL), 1)
@@ -37,6 +39,9 @@ ifeq ($(USE_MANAGED), 1)
 else
 	ifeq ($(USE_UNIFIED), 1)
 		ARGS_NVC	+= -gpu=cc$(GPU_ARCH),unified
+		ifeq ($(APPLY_FIRST_TOUCH), 1)
+			PARAM	+= -DAPPLY_FIRST_TOUCH
+		endif
 	else
 		ARGS_NVC	+= -gpu=cc$(GPU_ARCH)
 	endif
@@ -53,23 +58,23 @@ GFLAGS    = -std=c99 -Wall -Wextra -Wunused -Wcast-qual -Wcast-align -Ofast
 ifeq ($(NVHPC), 1)
 	CC   := nvc
 	CXX  := nvc++
-	ARGS	+= $(ARGS_NVC)
+	CFLAGS	+= $(ARGS_NVC)
 else
 	ifeq ($(AMDCLANG), 1)
 		CC	:= amdclang
 		CXX	:= amdclang++
-		ARGS	+= $(ARGS_AMD)
+		CFLAGS	+= $(ARGS_AMD)
 	else
 		ifeq ($(ICPX), 1)
 			CC	:= icx
 			CXX	:= icpx
-			ARGS	+= $(ARGS_ICPX)
+			CFLAGS	+= $(ARGS_ICPX)
 		endif
 	endif
 endif
 CXXFLAGS  = $(CFLAGS)
 LDFLAGS   =
-
+PARAM	+= -DCOMPILER="\"$(CXX)\"" -DMODEL_ID="($(MODEL_ID))"
 
 SRCS    = main.c diffusion.c misc.c
 TARGET = run
@@ -91,15 +96,15 @@ $(TARGET) : $(OBJS)
 
 %.o : %.c
 	$(call make-depend,$<,$@,$(subst .o,.d,$@))
-	$(CC) $(CFLAGS) $(INC) $(TARGET_ARCH)-c $<
+	$(CC) $(CFLAGS) $(PARAM) $(INC) $(TARGET_ARCH)-c $<
 
 %.o : %.cc
 	$(call make-depend,$<,$@,$(subst .o,.d,$@))
-	$(CXX) $(CXXFLAGS) $(INC) $(TARGET_ARCH) -c $<
+	$(CXX) $(CXXFLAGS) $(PARAM) $(INC) $(TARGET_ARCH) -c $<
 
 %.o : %.cpp
 	$(call make-depend,$<,$@,$(subst .o,.d,$@))
-	$(CXX) $(CXXFLAGS) $(INC) $(TARGET_ARCH) -c $<
+	$(CXX) $(CXXFLAGS) $(PARAM) $(INC) $(TARGET_ARCH) -c $<
 
 .PHONY: dist
 dist :
