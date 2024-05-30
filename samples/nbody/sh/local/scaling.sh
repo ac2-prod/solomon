@@ -3,17 +3,17 @@
 # set -o nounset
 # set -o pipefail
 
-USE_NVHPC=0
+USE_NVHPC=1
 USE_AMDCLANG=0
-USE_ICPX=1
+USE_ICPX=0
 USE_ACPP=0
 if [ $(($USE_NVHPC + $USE_AMDCLANG + $USE_ICPX + $USE_ACPP)) != 1 ]; then
 	echo "Only one compiler can be activated: USE_NVHPC, USE_AMDCLANG, USE_ICPX, and USE_ACPP"
 	exit 1
 fi
-NVIDIA_GPU=0
+NVIDIA_GPU=1
 AMD_GPU=0
-INTEL_GPU=1
+INTEL_GPU=0
 if [ $(($NVIDIA_GPU + $AMD_GPU + $INTEL_GPU)) != 1 ]; then
 	echo "Only one vendor can be activated: NVIDIA, AMD, and Intel"
 	exit 1
@@ -62,7 +62,8 @@ fi
 # recipe for NVIDIA HPC SDK
 if [ $USE_NVHPC == 1 ]; then
 	COMPILER=nvhpc
-	module load nvidia
+	module purge
+	module load nvhpc
 	nvc++ --version
 	MODEL_ID_LIST+=(`seq $(($MAX_MODEL_ID + 1)) 7`) # OpenACC: kernels/parallel, w/ or w/o dedicated options
 fi
@@ -135,7 +136,7 @@ do
 			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 2 ] ; then
-			THREADS=64
+			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 3 ] ; then
 			THREADS=128
@@ -147,10 +148,10 @@ do
 			THREADS=64
 		fi
 		if [ $MODEL_ID -eq 6 ] ; then
-			THREADS=64
+			THREADS=128
 		fi
 		if [ $MODEL_ID -eq 7 ] ; then
-			THREADS=64
+			THREADS=128
 		fi
 	fi
 
