@@ -55,18 +55,19 @@ RM  = rm -f
 MAKEDEPEND = makedepend
 GFLAGS    = -std=c99 -Wall -Wextra -Wunused -Wcast-qual -Wcast-align -Ofast
 
+CFLAGS	:= -Wall -Ofast
 ifeq ($(NVHPC), 1)
-	CC   := nvc
+	CC   := nvc -std=c99
 	CXX  := nvc++
 	CFLAGS	+= $(ARGS_NVC)
 else
 	ifeq ($(AMDCLANG), 1)
-		CC	:= amdclang
+		CC	:= amdclang -std=c99
 		CXX	:= amdclang++
 		CFLAGS	+= $(ARGS_AMD)
 	else
 		ifeq ($(ICPX), 1)
-			CC	:= icx
+			CC	:= icx -std=c99
 			CXX	:= icpx
 			CFLAGS	+= $(ARGS_ICPX)
 		endif
@@ -75,6 +76,9 @@ endif
 CXXFLAGS  = $(CFLAGS)
 LDFLAGS   =
 PARAM	+= -DCOMPILER="\"$(CXX)\"" -DMODEL_ID="($(MODEL_ID))"
+ifeq ($(AMDCLANG), 1)
+	LDFLAGS	+= -lm
+endif
 
 SRCS    = main.c diffusion.c misc.c
 TARGET = run
