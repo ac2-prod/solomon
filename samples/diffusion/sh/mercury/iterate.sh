@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J verify
+#SBATCH -J iterate
 #SBATCH -p share-batch
 #SBATCH --gres=gpu:1
 #SBATCH --time=24:00:00
