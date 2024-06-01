@@ -19,6 +19,7 @@ if [ $(($NVIDIA_GPU + $AMD_GPU + $INTEL_GPU)) != 1 ]; then
 	exit 1
 fi
 
+TIMEOUT=120s
 GPU_ID=0
 
 # OpenMP loop/distribute (2)
@@ -149,7 +150,7 @@ do
 		if [ -e $EXEC ]; then
 			for NUM in 32 64 128 256 512
 			do
-				COMMAND="numactl --localalloc $EXEC $NUM"
+				COMMAND="timeout ${TIMEOUT} numactl --localalloc $EXEC $NUM"
 				echo ${COMMAND}
 				eval ${COMMAND}
 			done
