@@ -100,7 +100,7 @@ int main(int argc, char *argv[]) {
     fprintf(fp, ",nx,ny,nz");
     fprintf(fp, ",time[s],Flops,Flop/s,error\n");
   }
-  fprintf(fp, "%d,%d", MODEL_ID, OPT_LEVEL);
+  fprintf(fp, "%d,%s", MODEL_ID, OPT_LEVEL);
   fprintf(fp, ",%d", nx);
   fprintf(fp, ",%d", ny);
   fprintf(fp, ",%d", nz);
