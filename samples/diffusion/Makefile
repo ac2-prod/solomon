@@ -13,10 +13,15 @@ NVHPC	:= 1
 AMDCLANG	:= 0
 ICPX	:= 0
 
+# -O1, -O2, -O3, -Ofast, or default (w/o optimization flag)
+OPT_LEVEL	:= 4
+
 USE_MANAGED	:= 0
 USE_UNIFIED	:= 0
 
 APPLY_FIRST_TOUCH	:= 0
+
+BENCHMARK	:= 0
 
 ifeq ($(USE_OPENACC), 1)
 	PARAM	+= -DOFFLOAD_BY_OPENACC
@@ -47,6 +52,9 @@ else
 	endif
 endif
 
+ifeq ($(BENCHMARK), 1)
+	PARAM	+= -DBENCHMARK_MODE
+endif
 
 INC	:= -I../../solomon
 
@@ -55,7 +63,28 @@ RM  = rm -f
 MAKEDEPEND = makedepend
 GFLAGS    = -std=c99 -Wall -Wextra -Wunused -Wcast-qual -Wcast-align -Ofast
 
-CFLAGS	:= -Wall -Ofast
+CFLAGS	:= -Wall
+ifeq ($(OPT_LEVEL), 1)
+	CFLAGS	+= -O1
+	PARAM	+= -DOPT_LEVEL="\"O1\""
+else
+	ifeq ($(OPT_LEVEL), 2)
+		CFLAGS	+= -O2
+		PARAM	+= -DOPT_LEVEL="\"O2\""
+	else
+		ifeq ($(OPT_LEVEL), 3)
+			CFLAGS	+= -O3
+			PARAM	+= -DOPT_LEVEL="\"O3\""
+		else
+			ifeq ($(OPT_LEVEL), 4)
+				CFLAGS	+= -Ofast
+				PARAM	+= -DOPT_LEVEL="\"Ofast\""
+			else
+				PARAM	+= -DOPT_LEVEL="\"default\""
+			endif
+		endif
+	endif
+endif
 ifeq ($(NVHPC), 1)
 	CC   := nvc -std=c99
 	CXX  := nvc++

@@ -57,7 +57,9 @@ int main(int argc, char *argv[]) {
     start_timer();
 
     for (; icnt < nt && time + 0.5 * dt < 0.1; icnt++) {
+#if !defined(BENCHMARK_MODE)
       if (icnt % 100 == 0) fprintf(stdout, "time(%4d) = %7.5f\n", icnt, time);
+#endif  //! defined(BENCHMARK_MODE)
 
       flop += diffusion3d(nx, ny, nz, dx, dy, dz, dt, kappa, f, fn);
 
@@ -69,11 +71,15 @@ int main(int argc, char *argv[]) {
     elapsed_time = get_elapsed_time();
   }
 
+#if !defined(BENCHMARK_MODE)
   fprintf(stdout, "Time = %8.3f [sec]\n", elapsed_time);
   fprintf(stdout, "Performance= %7.2f [GFlops]\n", flop / elapsed_time * 1.0e-09);
+#endif  //! defined(BENCHMARK_MODE)
 
   const double ferr = accuracy(time, nx, ny, nz, dx, dy, dz, kappa, f);
+#if !defined(BENCHMARK_MODE)
   fprintf(stdout, "Error[%d][%d][%d] = %10.6e\n", nx, ny, nz, ferr);
+#endif  //! defined(BENCHMARK_MODE)
 
   char filename[64];
   sprintf(filename, "diffusion_benchmark_%s%d.csv", COMPILER, MODEL_ID);
@@ -90,11 +96,11 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "ERROR: failed to open \"%s\"\n", filename);
       exit(1);
     }
-    fprintf(fp, "Model_ID");
+    fprintf(fp, "Model_ID,Optimization_level");
     fprintf(fp, ",nx,ny,nz");
     fprintf(fp, ",time[s],Flops,Flop/s,error\n");
   }
-  fprintf(fp, "%d", MODEL_ID);
+  fprintf(fp, "%d,%d", MODEL_ID, OPT_LEVEL);
   fprintf(fp, ",%d", nx);
   fprintf(fp, ",%d", ny);
   fprintf(fp, ",%d", nz);

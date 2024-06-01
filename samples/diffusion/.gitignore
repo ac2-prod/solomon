@@ -1,5 +1,10 @@
+fig/
 old/
 *_nvhpc_nvidia_*/
 *_amdclang_amd_gfx*/
 *_icpx_intel_pvc/
 # benchmark results for publication
+h100sxm/
+gh200/
+mi210/
+pvc/
