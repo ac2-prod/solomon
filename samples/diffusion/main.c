@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
   }
 #endif  // defined(APPLY_FIRST_TOUCH)
 
-  init(nx, ny, nz, dx, dy, dz, f);
+  init(nx, ny, nz, dx, dy, dz, f, padding);
 
   PRAGMA_ACC_DATA(ACC_CLAUSE_COPY(f [0:n]), ACC_CLAUSE_CREATE(fn [0:n])) {
     start_timer();
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
       if (icnt % 100 == 0) fprintf(stdout, "time(%4d) = %7.5f\n", icnt, time);
 #endif  //! defined(BENCHMARK_MODE)
 
-      flop += diffusion3d(nx, ny, nz, dx, dy, dz, dt, kappa, f, fn);
+      flop += diffusion3d(nx, ny, nz, dx, dy, dz, dt, kappa, f, fn, padding);
 
       swap(&f, &fn);
 
@@ -78,12 +78,15 @@ int main(int argc, char *argv[]) {
     elapsed_time = get_elapsed_time();
   }
 
+  const double byte_per_flop = sizeof(float) * 8.0 / 13.0;
+
 #if !defined(BENCHMARK_MODE)
   fprintf(stdout, "Time = %8.3f [sec]\n", elapsed_time);
-  fprintf(stdout, "Performance= %7.2f [GFlops]\n", flop / elapsed_time * 1.0e-09);
+  fprintf(stdout, "Performance = %7.2f [GFlop/s]\n", flop / elapsed_time * 1.0e-09);
+  fprintf(stdout, "Bandwidth   = %7.2f [GB/s]\n", byte_per_flop * flop / elapsed_time * 1.0e-09);
 #endif  //! defined(BENCHMARK_MODE)
 
-  const double ferr = accuracy(time, nx, ny, nz, dx, dy, dz, kappa, f);
+  const double ferr = accuracy(time, nx, ny, nz, dx, dy, dz, kappa, f, padding);
 #if !defined(BENCHMARK_MODE)
   fprintf(stdout, "Error[%d][%d][%d] = %10.6e\n", nx, ny, nz, ferr);
 #endif  //! defined(BENCHMARK_MODE)
@@ -103,15 +106,15 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "ERROR: failed to open \"%s\"\n", filename);
       exit(1);
     }
-    fprintf(fp, "Model_ID,Optimization_level");
+    fprintf(fp, "Model_ID,Optimization_level,padding");
     fprintf(fp, ",nx,ny,nz");
-    fprintf(fp, ",time[s],Flops,Flop/s,error,padding\n");
+    fprintf(fp, ",time[s],Flops,Flop/s,Bytes,B/s,error\n");
   }
-  fprintf(fp, "%d,%s", MODEL_ID, OPT_LEVEL);
+  fprintf(fp, "%d,%s,%d", MODEL_ID, OPT_LEVEL, padding);
   fprintf(fp, ",%d", nx);
   fprintf(fp, ",%d", ny);
   fprintf(fp, ",%d", nz);
-  fprintf(fp, ",%e,%e,%e,%e,%d\n", elapsed_time, flop, flop / elapsed_time, ferr, padding);
+  fprintf(fp, ",%e,%e,%e,%e,%d\n", elapsed_time, flop, flop / elapsed_time, byte_per_flop * flop, byte_per_flop * flop / elapsed_time, ferr);
 
   free(f);
   f = NULL;
