@@ -20,11 +20,17 @@
 
 * Collisionless $N$-body simulation based on direct method
 
+### diffusion: sample of memory-intensive application
+
+* Diffusion equation in 3D
+* Original implementation in OpenACC is available at https://github.com/hoshino-UTokyo/lecture_openacc (developed by Tetsuya Hoshino at Nagoya University)
+* Some trivial optimizations and refactoring are added
+
 ### [miniFE](https://github.com/Mantevo/miniFE): sample of memory-intensive application
 
 * An proxy application for unstructured implicit finite element codes
-* original implementation is available at https://github.com/Mantevo/miniFE
-* differences between the original implementation
+* Original implementation is available at https://github.com/Mantevo/miniFE
+* Differences between the original implementation:
   * cuda/
     * `MINFE_MATRIX_TYPE` is set as `-DMINFE_CSR_MATRIX` instead of `-DMINFE_ELL_MATRIX` to adopt the same scheme with the OpenMP target implementations
   * kokkos: as is
