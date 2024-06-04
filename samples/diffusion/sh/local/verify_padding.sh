@@ -22,6 +22,8 @@ fi
 TIMEOUT=120s
 GPU_ID=0
 
+PADDING=1
+
 # OpenMP loop/distribute (2)
 MIN_MODEL_ID=0
 MAX_MODEL_ID=1
@@ -150,7 +152,7 @@ do
 		if [ -e $EXEC ]; then
 			for NUM in 32 64 128 256 512
 			do
-				COMMAND="timeout ${TIMEOUT} numactl --localalloc $EXEC $NUM"
+				COMMAND="timeout ${TIMEOUT} numactl --localalloc $EXEC $NUM $PADDING"
 				echo ${COMMAND}
 				eval ${COMMAND}
 			done

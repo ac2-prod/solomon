@@ -3,16 +3,16 @@
 # set -o nounset
 # set -o pipefail
 
-USE_NVHPC=0
-USE_AMDCLANG=1
+USE_NVHPC=1
+USE_AMDCLANG=0
 USE_ICPX=0
 USE_ACPP=0
 if [ $(($USE_NVHPC + $USE_AMDCLANG + $USE_ICPX + $USE_ACPP)) != 1 ]; then
 	echo "Only one compiler can be activated: USE_NVHPC, USE_AMDCLANG, USE_ICPX, and USE_ACPP"
 	exit 1
 fi
-NVIDIA_GPU=0
-AMD_GPU=1
+NVIDIA_GPU=1
+AMD_GPU=0
 INTEL_GPU=0
 if [ $(($NVIDIA_GPU + $AMD_GPU + $INTEL_GPU)) != 1 ]; then
 	echo "Only one vendor can be activated: NVIDIA, AMD, and Intel"
@@ -62,7 +62,7 @@ fi
 if [ $USE_NVHPC == 1 ]; then
 	COMPILER=nvhpc
 	module purge
-	module load nvhpc
+	module load nvhpc/24.3
 	nvc++ --version
 	# MODEL_ID_LIST+=(`seq $(($MAX_MODEL_ID + 1)) 3`) # (OpenMP loop/distribute (2) + OpenACC kernels/parallel (2)) = 4 models
 	# MODEL_ID_LIST+=(`seq $(($MAX_MODEL_ID + 1)) 7`) # (OpenMP loop/distribute (2) + OpenACC kernels/parallel (2)) * (data/managed (2)) = 8 models

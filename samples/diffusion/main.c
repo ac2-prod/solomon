@@ -16,11 +16,18 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Usage is: %s N\n", argv[0]);
     fprintf(stderr, "\tN: number of grid points <int>\n");
   }
+  int padding = 0;
+  if (argc >= 3) {
+    const int tmp = atoi(argv[2]);
+    if (tmp > 0) {
+      padding = tmp;
+    }
+  }
 
   const int nx = atoi(argv[1]);
   const int ny = nx;
   const int nz = ny;
-  const int n = nx * ny * nz;
+  const int n = nx * ny * (nz + padding);
 
   const float lx = 1.0F;
   const float ly = 1.0F;
@@ -98,13 +105,13 @@ int main(int argc, char *argv[]) {
     }
     fprintf(fp, "Model_ID,Optimization_level");
     fprintf(fp, ",nx,ny,nz");
-    fprintf(fp, ",time[s],Flops,Flop/s,error\n");
+    fprintf(fp, ",time[s],Flops,Flop/s,error,padding\n");
   }
   fprintf(fp, "%d,%s", MODEL_ID, OPT_LEVEL);
   fprintf(fp, ",%d", nx);
   fprintf(fp, ",%d", ny);
   fprintf(fp, ",%d", nz);
-  fprintf(fp, ",%e,%e,%e,%e\n", elapsed_time, flop, flop / elapsed_time, ferr);
+  fprintf(fp, ",%e,%e,%e,%e,%d\n", elapsed_time, flop, flop / elapsed_time, ferr, padding);
 
   free(f);
   f = NULL;
