@@ -79,7 +79,7 @@ end
 
 function plot_series(file_list, summary, GPU, lang, mode, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, fig_max, ax_max, fig_med, ax_med)
     df = read_results(file_list)
-    for arg in [(opt="O1", point_id=1, line_id=1, color_id=1), (opt="O2", point_id=2, line_id=2, color_id=2), (opt="O3", point_id=3, line_id=3, color_id=3), (opt="Ofast", point_id=4, line_id=4, color_id=4)]
+    for arg in [(opt="O1", point_id=1, line_id=1, color_id=2), (opt="O2", point_id=2, line_id=2, color_id=3), (opt="O3", point_id=3, line_id=3, color_id=0), (opt="Ofast", point_id=0, line_id=0, color_id=1)]
         num, perf_max, perf_med, summary = split_results(df, summary, GPU, lang, mode, arg.opt)
         max_of_perf_max = max(max_of_perf_max, maximum(perf_max))
         max_of_perf_med = max(max_of_perf_med, maximum(perf_med))
