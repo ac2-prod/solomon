@@ -11,7 +11,7 @@ function parse_cmd()
         "--num", "-n"
         help = "number of data points to show the sustained performance"
         arg_type = Int
-        default = 9
+        default = 6
     end
     return parse_args(cfg)
 end
@@ -630,7 +630,7 @@ function main()
                 at.semilogx()
             end
         end
-        fig.ax[begin, ny].yaxis.set_major_formatter(PyPlot.matplotlib.ticker.FuncFormatter(util_pyplot.scientific))
+        fig.ax[begin, ny].yaxis.set_major_formatter(PyPlot.matplotlib.ticker.FuncFormatter(util_pyplot.scientific2))
     end
     for fig in [compare_base_max, compare_fast_max, compare_base_med, compare_fast_med, compare_sustained_base_max, compare_sustained_fast_max, compare_sustained_base_med, compare_sustained_fast_med]
         for at in fig.ax
@@ -638,7 +638,7 @@ function main()
         end
         set_ylabel(fig, fig.ax[begin, ny], "Number of interactions per second")
         if compare
-            set_ylabel(fig, fig.ax[begin, begin], "Ratio to the fastest model")
+            set_ylabel(fig, fig.ax[begin, begin], "Ratio to the dedicated implementation")
         end
 
         for ii in 1:fig.nx

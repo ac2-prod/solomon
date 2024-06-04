@@ -156,7 +156,7 @@ function main()
         color_id = 0
         mode = "explicit"
         summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model0/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (loop)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[1, gpu_id], compare_med, compare_med.ax[1, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
-        summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model1/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (dist)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
+        summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model1/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (distribute)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
         if has_openacc
             summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model2/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (kernels)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[3, gpu_id], compare_med, compare_med.ax[3, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
             summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model3/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (parallel)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[4, gpu_id], compare_med, compare_med.ax[4, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
@@ -169,7 +169,7 @@ function main()
             color_id = 2
             mode = "managed"
             summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model4/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (loop)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[1, gpu_id], compare_med, compare_med.ax[1, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
-            summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model5/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (dist)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
+            summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model5/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (distribute)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
             if has_openacc
                 summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model6/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (kernels)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[3, gpu_id], compare_med, compare_med.ax[3, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
                 summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model7/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (parallel)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[4, gpu_id], compare_med, compare_med.ax[4, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
@@ -183,7 +183,7 @@ function main()
             color_id = 3
             mode = "unified"
             summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model8/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (loop)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[1, gpu_id], compare_med, compare_med.ax[1, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
-            summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model9/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (dist)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
+            summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model9/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (distribute)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
             if has_openacc
                 summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model10/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (kernels)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[3, gpu_id], compare_med, compare_med.ax[3, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
                 summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model11/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (parallel)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[4, gpu_id], compare_med, compare_med.ax[4, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
@@ -196,7 +196,7 @@ function main()
                 color_id = 1
                 mode = "unified, first touch"
                 summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model12/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (loop)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[1, gpu_id], compare_med, compare_med.ax[1, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
-                summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model13/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (dist)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
+                summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model13/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "omp (distribute)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[2, gpu_id], compare_med, compare_med.ax[2, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
                 if has_openacc
                     summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model14/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (kernels)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[3, gpu_id], compare_med, compare_med.ax[3, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
                     summary, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med = plot_specified_result(glob(string(root, "/iterate/model15/diffusion_benchmark_*.csv")), summary, gpu[gpu_id].caption, "acc (parallel)", mode, opt_level, max_of_perf_max, min_of_perf_max, max_of_perf_med, min_of_perf_med, compare_max, compare_max.ax[4, gpu_id], compare_med, compare_med.ax[4, gpu_id], point_id=point_id, line_id=line_id, color_id=color_id)
@@ -232,7 +232,7 @@ function main()
                     maptag = string(gpu[jj].caption, ", omp (loop)")
                 end
                 if ii == 2
-                    maptag = string(gpu[jj].caption, ", omp (dist)")
+                    maptag = string(gpu[jj].caption, ", omp (distribute)")
                 end
                 if ii == 3
                     maptag = string(gpu[jj].caption, ", acc (kernels)")
@@ -271,11 +271,11 @@ function main()
     if !ispath("fig")
         mkdir("fig")
     end
-    compare_max.fig.savefig(string("fig/", "diffusion", "_max", ".png"), format="png", dpi=100, bbox_inches="tight")
-    compare_med.fig.savefig(string("fig/", "diffusion", "_med", ".png"), format="png", dpi=100, bbox_inches="tight")
+    compare_max.fig.savefig(string("fig/", "diffusion", "_mode", "_max", ".png"), format="png", dpi=100, bbox_inches="tight")
+    compare_med.fig.savefig(string("fig/", "diffusion", "_mode", "_med", ".png"), format="png", dpi=100, bbox_inches="tight")
     if output_pdf
-        compare_max.fig.savefig(string("fig/", "diffusion", "_max", ".pdf"), format="pdf", bbox_inches="tight")
-        compare_med.fig.savefig(string("fig/", "diffusion", "_med", ".pdf"), format="pdf", bbox_inches="tight")
+        compare_max.fig.savefig(string("fig/", "diffusion", "_mode", "_max", ".pdf"), format="pdf", bbox_inches="tight")
+        compare_med.fig.savefig(string("fig/", "diffusion", "_mode", "_med", ".pdf"), format="pdf", bbox_inches="tight")
     end
 
     PyPlot.close("all")

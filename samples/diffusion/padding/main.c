@@ -16,11 +16,18 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Usage is: %s N\n", argv[0]);
     fprintf(stderr, "\tN: number of grid points <int>\n");
   }
+  int padding = 0;
+  if (argc >= 3) {
+    const int tmp = atoi(argv[2]);
+    if (tmp > 0) {
+      padding = tmp;
+    }
+  }
 
   const int nx = atoi(argv[1]);
   const int ny = nx;
   const int nz = ny;
-  const int n = nx * ny * nz;
+  const int n = nx * ny * (nz + padding);
 
   const float lx = 1.0F;
   const float ly = 1.0F;
@@ -52,7 +59,7 @@ int main(int argc, char *argv[]) {
   }
 #endif  // defined(APPLY_FIRST_TOUCH)
 
-  init(nx, ny, nz, dx, dy, dz, f);
+  init(nx, ny, nz, dx, dy, dz, f, padding);
 
   PRAGMA_ACC_DATA(ACC_CLAUSE_COPY(f [0:n]), ACC_CLAUSE_CREATE(fn [0:n])) {
     start_timer();
@@ -62,7 +69,7 @@ int main(int argc, char *argv[]) {
       if (icnt % 100 == 0) fprintf(stdout, "time(%4d) = %7.5f\n", icnt, time);
 #endif  //! defined(BENCHMARK_MODE)
 
-      flop += diffusion3d(nx, ny, nz, dx, dy, dz, dt, kappa, f, fn);
+      flop += diffusion3d(nx, ny, nz, dx, dy, dz, dt, kappa, f, fn, padding);
 
       swap(&f, &fn);
 
@@ -78,7 +85,7 @@ int main(int argc, char *argv[]) {
   fprintf(stdout, "Bandwidth   = %7.2f [GB/s]\n", byte_per_flop * flop / elapsed_time * 1.0e-09);
 #endif  //! defined(BENCHMARK_MODE)
 
-  const double ferr = accuracy(time, nx, ny, nz, dx, dy, dz, kappa, f);
+  const double ferr = accuracy(time, nx, ny, nz, dx, dy, dz, kappa, f, padding);
 #if !defined(BENCHMARK_MODE)
   fprintf(stdout, "Error[%d][%d][%d] = %10.6e\n", nx, ny, nz, ferr);
 #endif  //! defined(BENCHMARK_MODE)
@@ -98,11 +105,11 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "ERROR: failed to open \"%s\"\n", filename);
       exit(1);
     }
-    fprintf(fp, "Model_ID,Optimization_level");
+    fprintf(fp, "Model_ID,Optimization_level,padding");
     fprintf(fp, ",nx,ny,nz");
     fprintf(fp, ",time[s],Flops,Flop/s,Bytes,B/s,error\n");
   }
-  fprintf(fp, "%d,%s", MODEL_ID, OPT_LEVEL);
+  fprintf(fp, "%d,%s,%d", MODEL_ID, OPT_LEVEL, padding);
   fprintf(fp, ",%d", nx);
   fprintf(fp, ",%d", ny);
   fprintf(fp, ",%d", nz);

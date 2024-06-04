@@ -184,7 +184,7 @@ function main()
                     maptag = string(gpu[Ngpu-jj+1].caption, ", omp (loop)")
                 end
                 if ii == 2
-                    maptag = string(gpu[Ngpu-jj+1].caption, ", omp (dist)")
+                    maptag = string(gpu[Ngpu-jj+1].caption, ", omp (distribute)")
                 end
                 if ii == 3
                     maptag = string(gpu[Ngpu-jj+1].caption, ", acc (kernels)")
