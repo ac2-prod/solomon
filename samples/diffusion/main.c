@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
   int icnt = 0;
   double flop = 0.0;
   double elapsed_time = 0.0;
+  const double byte_per_flop = sizeof(float) * 8.0 / 13.0;
 
   float *f = (float *)malloc(sizeof(float) * n);
   float *fn = (float *)malloc(sizeof(float) * n);
@@ -77,8 +78,6 @@ int main(int argc, char *argv[]) {
 
     elapsed_time = get_elapsed_time();
   }
-
-  const double byte_per_flop = sizeof(float) * 8.0 / 13.0;
 
 #if !defined(BENCHMARK_MODE)
   fprintf(stdout, "Time = %8.3f [sec]\n", elapsed_time);
@@ -114,7 +113,7 @@ int main(int argc, char *argv[]) {
   fprintf(fp, ",%d", nx);
   fprintf(fp, ",%d", ny);
   fprintf(fp, ",%d", nz);
-  fprintf(fp, ",%e,%e,%e,%e,%d\n", elapsed_time, flop, flop / elapsed_time, byte_per_flop * flop, byte_per_flop * flop / elapsed_time, ferr);
+  fprintf(fp, ",%e,%e,%e,%e,%e,%e\n", elapsed_time, flop, flop / elapsed_time, byte_per_flop * flop, byte_per_flop * flop / elapsed_time, ferr);
 
   free(f);
   f = NULL;
