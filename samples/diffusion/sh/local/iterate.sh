@@ -62,7 +62,7 @@ fi
 if [ $USE_NVHPC == 1 ]; then
 	COMPILER=nvhpc
 	module purge
-	module load nvhpc/24.3
+	module load nvhpc
 	nvc++ --version
 	# MODEL_ID_LIST+=(`seq $(($MAX_MODEL_ID + 1)) 3`) # (OpenMP loop/distribute (2) + OpenACC kernels/parallel (2)) = 4 models
 	# MODEL_ID_LIST+=(`seq $(($MAX_MODEL_ID + 1)) 7`) # (OpenMP loop/distribute (2) + OpenACC kernels/parallel (2)) * (data/managed (2)) = 8 models

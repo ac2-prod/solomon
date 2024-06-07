@@ -5,6 +5,10 @@ function parse_cmd()
         "--pdf", "-p"
         help = "generate figure in PDF format"
         action = :store_true
+        # "--padding"
+        # help = "number of padded elements in z-direction"
+        # arg_type = Int
+        # default = 0
     end
     return parse_args(cfg)
 end
@@ -124,6 +128,7 @@ function main()
     # read options
     argv = parse_cmd()
     output_pdf = argv["pdf"]
+    # padding = argv["padding"]
 
     # initialize matplotlib
     util_pyplot.config()
