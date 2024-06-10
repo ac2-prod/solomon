@@ -169,6 +169,16 @@
 #define AS_FIRSTPRIVATE(...) ACC_CLAUSE_FIRSTPRIVATE(__VA_ARGS__)
 
 ///
+/// @brief specify data on host
+///
+#define PRAGMA_HOST_DATA(...) PRAGMA_ACC_HOST_DATA(__VA_ARGS__)
+
+///
+/// @brief specify data on device
+///
+#define PRAGMA_DEVICE_DATA(...) PRAGMA_ACC_DATA(__VA_ARGS__)
+
+///
 /// @brief use device data from host
 ///
 #define USE_DEVICE_DATA_FROM_HOST(...) PRAGMA_ACC_HOST_DATA_USE_DEVICE(__VA_ARGS__)
