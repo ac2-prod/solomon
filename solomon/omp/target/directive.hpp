@@ -74,6 +74,23 @@
 
 ///
 /// @note Directives and Constructs in OpenMP 5.2 API Syntax Reference Guide (https://www.openmp.org/wp-content/uploads/OpenMPRefCard-5-2-web.pdf)
+/// @remarks Synchronization constructs
+///
+
+///
+/// @brief _Pragma("omp taskwait [clause [[,] clause] ... ]")
+/// @details Specifies a wait on the completion of child tasks of the current task.
+///
+#define PRAGMA_OMP_TARGET_TASKWAIT(...) PRAGMA_OMP_TASKWAIT(__VA_ARGS__)
+
+///
+/// @brief _Pragma("omp atomic [clause [[,] clause] ... ]")
+/// @details Ensures a specific storage location is accessed atomically.
+///
+#define PRAGMA_OMP_TARGET_ATOMIC(...) PRAGMA_OMP_ATOMIC(__VA_ARGS__)
+
+///
+/// @note Directives and Constructs in OpenMP 5.2 API Syntax Reference Guide (https://www.openmp.org/wp-content/uploads/OpenMPRefCard-5-2-web.pdf)
 /// @remarks Combined Constructs and Directives
 /// @details The following combined constructs and directives are created following the parameters defined in section 17 of the OpenMP API version 5.2 specification and were explicitly defined in previous versions.
 ///

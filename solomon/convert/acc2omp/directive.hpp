@@ -74,7 +74,7 @@
 /// @brief _Pragma("acc atomic [read | write | update | capture]")
 /// @details replace to _Pragma("omp atomic [read | write | update | capture]")
 ///
-#define PRAGMA_ACC_ATOMIC(...) PRAGMA_OMP_ATOMIC(__VA_ARGS__)
+#define PRAGMA_ACC_ATOMIC(...) PRAGMA_OMP_TARGET_ATOMIC(__VA_ARGS__)
 
 ///
 /// @brief _Pragma("acc update [clause [[,] clause] ... ]")
@@ -86,7 +86,7 @@
 /// @brief _Pragma("acc wait [(expression_list)] [clause [[,] clause] ... ]")
 /// @details replace to _Pragma("omp taskwait [clause [[,] clause] ... ]")
 ///
-#define PRAGMA_ACC_WAIT(...) PRAGMA_OMP_TASKWAIT(__VA_ARGS__)
+#define PRAGMA_ACC_WAIT(...) PRAGMA_OMP_TARGET_TASKWAIT(__VA_ARGS__)
 
 ///
 /// @brief _Pragma("acc routine [clause [[,] clause] ... ]")
