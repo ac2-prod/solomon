@@ -56,10 +56,12 @@ endif
 ARGS_AMD	+= -funroll-loops
 ARGS_ICPX	+= -funroll-loops
 ifeq ($(USE_FAST_MATH), 1)
-	# ARGS_NVC	+= -Mfprelaxed=rsqrt
+# adding fastmath is required to achieve a reasonal performance (-Mfprelaxed=rsqrt only is not enough)
+# in CUDA, --use_fast_math implies --ftz=true --prec-div=false --prec-sqrt=false --fmad=true
+# therefore, amdclang++/icpx should activate corresponding optimization with --ftz=true
 	ARGS_NVC	+= -Mfprelaxed=rsqrt -gpu=cc$(GPU_ARCH),fastmath
-	ARGS_AMD	+= -mfma -ffp-contract=fast
-	ARGS_ICPX	+= -mfma -ffp-contract=fast
+	ARGS_AMD	+= -fgpu-flush-denormals-to-zero
+	ARGS_ICPX	+= -ftz
 else
 	ARGS_NVC	+= -gpu=cc$(GPU_ARCH)
 endif
