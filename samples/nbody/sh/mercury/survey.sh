@@ -35,7 +35,7 @@ module purge
 hostname
 
 # recipe for NVIDIA GPU
-module load cuda
+module load cuda/12.3
 nvcc --version
 VENDER=nvidia
 ARCH=90
@@ -114,7 +114,8 @@ done
 DUMP=survey
 mkdir -p "${DUMP}"
 mv bin log ${DUMP}
-DEST=${TARGET}_${ARCH}
+HOST=`hostname --short`
+DEST=${HOST}_${TARGET}_${ARCH}
 mkdir -p "${DEST}"
 mv --backup=numbered ${DUMP} ${DEST}
 

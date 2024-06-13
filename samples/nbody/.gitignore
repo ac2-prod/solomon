@@ -2,8 +2,9 @@ bin/
 log/
 fig/
 dat/
-nvhpc_nvidia_90/
-amdclang_amd_gfx90a/
+*_nvhpc_nvidia_*/
+*_amdclang_amd_*/
+*_icpx_intel_*/
 # benchmark results for publication
 mercury/
 milan2/

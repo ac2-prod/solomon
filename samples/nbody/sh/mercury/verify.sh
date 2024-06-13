@@ -27,7 +27,7 @@ module purge
 hostname
 
 # recipe for NVIDIA GPU
-module load cuda
+module load cuda/12.3
 nvcc --version
 VENDER=nvidia
 ARCH=90
@@ -131,7 +131,8 @@ do
 	mv --backup=numbered bin ${DUMP}/model${MODEL_ID}
 done
 
-DEST=${TARGET}_${ARCH}
+HOST=`hostname --short`
+DEST=${HOST}_${TARGET}_${ARCH}
 mkdir -p "${DEST}"
 mv --backup=numbered ${DUMP} ${DEST}
 
