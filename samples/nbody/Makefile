@@ -53,8 +53,8 @@ else
 	ARGS_AMD	:= -target x86_64-pc-linux-gnu -fopenmp -fopenmp-targets=amdgcn-amd-amdhsa -Xopenmp-target=amdgcn-amd-amdhsa -march=$(GPU_ARCH)
 	ARGS_ICPX	:= -fiopenmp -fopenmp-targets=spir64_gen -Xs "-device $(GPU_ARCH)" # -Xs "-device pvc" is for Ahead-of-Time compilation
 endif
-ARGS_AMD	+= -funroll-loops
-ARGS_ICPX	+= -funroll-loops
+# ARGS_AMD	+= -funroll-loops
+# ARGS_ICPX	+= -funroll-loops
 ifeq ($(USE_FAST_MATH), 1)
 # adding fastmath is required to achieve a reasonal performance (-Mfprelaxed=rsqrt only is not enough)
 # in CUDA, --use_fast_math implies --ftz=true --prec-div=false --prec-sqrt=false --fmad=true
@@ -64,6 +64,7 @@ ifeq ($(USE_FAST_MATH), 1)
 	ARGS_ICPX	+= -ftz
 else
 	ARGS_NVC	+= -gpu=cc$(GPU_ARCH)
+	ARGS_ICPX	+= -no-ftz
 endif
 
 ifeq ($(NVHPC), 1)

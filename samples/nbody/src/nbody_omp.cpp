@@ -143,11 +143,11 @@ int main(void) {
 #ifndef BENCHMARK_MODE
   static char file[16];
   sprintf(file, "collapse");
-  const auto num = NTHREADS * 2;  // number of N-body particles
-  const auto eps = 1.5625e-2F;    // Plummer softening
-  const auto Mtot = 1.0F;         // total mass
-  const auto rad = 1.0F;          // initial-radius of the sphere
-  const auto virial = 0.2F;       // initial virial-ratio
+  const auto num = 1031;        // number of N-body particles, 1031 is the minimum prime number greater than 1024
+  const auto eps = 1.5625e-2F;  // Plummer softening
+  const auto Mtot = 1.0F;       // total mass
+  const auto rad = 1.0F;        // initial-radius of the sphere
+  const auto virial = 0.2F;     // initial virial-ratio
   const auto epsinv = 1.0F / eps;
 
   // set dt etc. (snapshot_interval must be multiply of dt)

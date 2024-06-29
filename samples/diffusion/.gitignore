@@ -1,3 +1,6 @@
+slurm-*.out
+*.o
+*.d
 fig/
 old/
 *_nvhpc_nvidia_*/

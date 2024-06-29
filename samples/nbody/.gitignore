@@ -2,6 +2,7 @@ bin/
 log/
 fig/
 dat/
+slurm-*.out
 *_nvhpc_nvidia_*/
 *_amdclang_amd_*/
 *_icpx_intel_*/
