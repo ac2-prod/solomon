@@ -11,7 +11,7 @@ function parse_cmd()
         "--num", "-n"
         help = "number of data points to show the sustained performance"
         arg_type = Int
-        default = 6
+        default = 4
     end
     return parse_args(cfg)
 end
@@ -86,6 +86,7 @@ using Parameters
     caption::String
     num_cores::Float32
     best_env_label::String
+    fastest_mode::String = "ftz"
 end
 
 using DataFrames
@@ -106,8 +107,8 @@ function main()
     gpu = Array{gpu_config,1}(undef, Ngpu)
     gpu[1] = gpu_config(name="h100sxm", root="mercury/h100sxm", has_openacc=true, caption="NVIDIA H100 SXM 80GB", num_cores=128 * 132, best_env_label="SYCL (icpx)")
     # gpu[2] = gpu_config(name="gh200", root="mercury/gh200", has_openacc=true, caption="NVIDIA GH200 480GB", num_cores=128 * 132, best_env_label="CUDA")
-    gpu[2] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD Instinct MI210", num_cores=64 * 104, best_env_label="HIP (packed FP32)")
-    gpu[3] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel DC GPU Max 1100", num_cores=16 * 448, best_env_label="SYCL (icpx)")
+    gpu[2] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD MI210", num_cores=64 * 104, best_env_label="SYCL (acpp, packed FP32)", fastest_mode="default")
+    gpu[3] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel DC GPU Max 1100", num_cores=16 * 448, best_env_label="SYCL (icpx)", fastest_mode="default")
 
     ny = compare ? 2 : 1
 
@@ -163,6 +164,7 @@ function main()
         root = gpu[gpu_id].root
         has_openacc = gpu[gpu_id].has_openacc
         name = gpu[gpu_id].name
+        fastest_mode = gpu[gpu_id].fastest_mode
 
         # read measured performance
         N_base_omp_loop, perf_base_max_omp_loop, perf_base_med_omp_loop, summary = read_results(glob(string(root, "/scaling/model0/nbody/log/*.csv")), summary, gpu[gpu_id].caption, "omp (loop)", "base")
@@ -234,7 +236,7 @@ function main()
             min_of_sustained_perf_fast_med = min(min_of_sustained_perf_fast_med, minimum(sustained_perf_fast_med_acc_ker), minimum(sustained_perf_fast_med_acc_par))
         end
         if compare
-            N_best, perf_max_best, perf_med_best, summary = read_results(glob(string(root, "/fastest/scaling/log/nbody_benchmark_*.csv")), summary, gpu[gpu_id].caption, gpu[gpu_id].best_env_label, "best")
+            N_best, perf_max_best, perf_med_best, summary = read_results(glob(string(root, "/fastest/scaling/", fastest_mode, "/log/nbody_benchmark_*.csv")), summary, gpu[gpu_id].caption, gpu[gpu_id].best_env_label, "best")
             num_cut_lower = Integer(log2(minimum(N_best) / minimum(N_base_omp_dist)))
             if num_cut_lower > 0
                 deleteat!(N_best, 1:num_cut_lower)

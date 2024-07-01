@@ -125,10 +125,10 @@ function main()
     # Ngpu = 4
     Ngpu = 3
     gpu = Array{gpu_config,1}(undef, Ngpu)
-    gpu[1] = gpu_config(name="h100sxm", root="h100sxm", has_openacc=true, has_managed=true, opt_level="O1", caption="NVIDIA H100 SXM 80GB")
+    gpu[1] = gpu_config(name="h100sxm", root="h100sxm", has_openacc=true, has_managed=true, opt_level="default", caption="NVIDIA H100 SXM 80GB")
     # gpu[2] = gpu_config(name="gh200", root="gh200", has_openacc=true, has_managed=true, has_unified=true, set_first_touch=true, opt_level="O1", caption="NVIDIA GH200 480GB")
     gpu[2] = gpu_config(name="mi210", root="mi210", caption="AMD Instinct MI210")
-    gpu[3] = gpu_config(name="pvc", root="pvc", caption="Intel Data Center GPU Max 1100")
+    gpu[3] = gpu_config(name="pvc", root="pvc", opt_level="default", caption="Intel Data Center GPU Max 1100")
 
     compare_max = util_pyplot.set_Panel(nx=Ngpu)
     compare_med = util_pyplot.set_Panel(nx=Ngpu)
