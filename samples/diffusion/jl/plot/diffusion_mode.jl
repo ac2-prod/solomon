@@ -124,7 +124,7 @@ function main()
 
     Ngpu = 2
     gpu = Array{gpu_config,1}(undef, Ngpu)
-    gpu[1] = gpu_config(name="h100sxm", root="h100sxm", has_openacc=true, has_managed=true, opt_level="O1", caption="NVIDIA H100 SXM 80GB")
+    gpu[1] = gpu_config(name="h100sxm", root="h100sxm", has_openacc=true, has_managed=true, opt_level="default", caption="NVIDIA H100 SXM 80GB")
     gpu[2] = gpu_config(name="gh200", root="gh200", has_openacc=true, has_managed=true, has_unified=true, set_first_touch=true, opt_level="O1", caption="NVIDIA GH200 480GB")
     # gpu[3] = gpu_config(name="mi210", root="mi210", caption="AMD Instinct MI210")
     # gpu[4] = gpu_config(name="pvc", root="pvc", caption="Intel DC GPU Max 1100")

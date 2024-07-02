@@ -631,6 +631,7 @@ function main()
                 # xl, xr = at.get_xlim()
                 # at.set_xlim(util_pyplot.scale_axis(gpu[ii].num_cores, xr))
                 at.semilogx()
+                at.tick_params(axis="x", which="minor", labelbottom=false)
             end
         end
         fig.ax[begin, ny].yaxis.set_major_formatter(PyPlot.matplotlib.ticker.FuncFormatter(util_pyplot.scientific2))
