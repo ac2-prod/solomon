@@ -172,6 +172,7 @@ function main()
         end
         for at in fig.ax[:, begin]
             at.set_xticklabels([L"$32^3$", L"$64^3$", L"$128^3$", L"$256^3$", L"$512^3$"])
+            at.tick_params(axis="x", which="major", labelsize=0.9 * fig.fs)
             set_xlabel(fig, at, L"$N_x N_y N_z$")
         end
         for at in fig.ax[begin, :]
@@ -201,7 +202,7 @@ function main()
                 end
                 caption = string("(", Char(97 + id), ")")
                 at = fig.ax[ii, jj]
-                at.text(0.03, 0.97, string(caption, "~", maptag), color="black", fontsize=fig.fs, horizontalalignment="left", verticalalignment="top", transform=at.transAxes, bbox=Dict("facecolor" => "white", "edgecolor" => "None", "alpha" => 0.75))
+                at.text(0.02, 0.98, string(caption, "~", maptag), color="black", fontsize=fig.fs * 0.8, horizontalalignment="left", verticalalignment="top", transform=at.transAxes, bbox=Dict("facecolor" => "white", "edgecolor" => "None", "alpha" => 0.75))
             end
             for ii in 3:4
                 for jj in 3:4

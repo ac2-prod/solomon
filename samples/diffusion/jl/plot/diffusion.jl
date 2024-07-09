@@ -122,13 +122,13 @@ function main()
     # initialize matplotlib
     util_pyplot.config()
 
-    # Ngpu = 4
-    Ngpu = 3
+    Ngpu = 4
+    # Ngpu = 3
     gpu = Array{gpu_config,1}(undef, Ngpu)
     gpu[1] = gpu_config(name="h100sxm", root="h100sxm", has_openacc=true, has_managed=true, opt_level="default", caption="NVIDIA H100 SXM 80GB")
-    # gpu[2] = gpu_config(name="gh200", root="gh200", has_openacc=true, has_managed=true, has_unified=true, set_first_touch=true, opt_level="O1", caption="NVIDIA GH200 480GB")
-    gpu[2] = gpu_config(name="mi210", root="mi210", caption="AMD Instinct MI210")
-    gpu[3] = gpu_config(name="pvc", root="pvc", opt_level="default", caption="Intel Data Center GPU Max 1100")
+    gpu[2] = gpu_config(name="gh200", root="gh200", has_openacc=true, has_managed=true, has_unified=true, set_first_touch=true, opt_level="O1", caption="NVIDIA GH200 480GB")
+    gpu[3] = gpu_config(name="mi210", root="mi210", caption="AMD Instinct MI210")
+    gpu[4] = gpu_config(name="pvc", root="pvc", opt_level="default", caption="Intel Data Center GPU Max 1100")
 
     compare_max = util_pyplot.set_Panel(nx=Ngpu)
     compare_med = util_pyplot.set_Panel(nx=Ngpu)
@@ -173,6 +173,7 @@ function main()
             at.set_xticks([32^3, 64^3, 128^3, 256^3, 512^3])
             at.grid()
             at.set_xticklabels([L"$32^3$", L"$64^3$", L"$128^3$", L"$256^3$", L"$512^3$"])
+            at.tick_params(axis="x", which="major", labelsize=0.9 * fig.fs)
             set_xlabel(fig, at, L"$N_x N_y N_z$")
         end
         set_ylabel(fig, fig.ax[begin], L"\unit{GFlop/s}")
@@ -182,9 +183,9 @@ function main()
             id = ii - 1
             caption = string("(", Char(97 + id), ")")
             at = fig.ax[ii]
-            at.text(0.03, 0.97, string(caption, "~", maptag), color="black", fontsize=fig.fs, horizontalalignment="left", verticalalignment="top", transform=at.transAxes, bbox=Dict("facecolor" => "white", "edgecolor" => "None", "alpha" => 0.75))
+            at.text(0.03, 0.97, string(caption, "~", maptag), color="black", fontsize=fig.fs * 0.9, horizontalalignment="left", verticalalignment="top", transform=at.transAxes, bbox=Dict("facecolor" => "white", "edgecolor" => "None", "alpha" => 0.75))
             handles, labels = at.get_legend_handles_labels()
-            at.legend(handles[end:-1:begin], labels[end:-1:begin], numpoints=1, handlelength=2.0, loc="lower right", fontsize=fig.fs)
+            at.legend(handles[end:-1:begin], labels[end:-1:begin], numpoints=1, handlelength=2.0, loc="lower right", fontsize=fig.fs * 0.8)
             handles = nothing
             labels = nothing
         end

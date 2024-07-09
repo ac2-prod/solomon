@@ -47,9 +47,10 @@ end
 # inch: size of panels in units of inch (A4 is 8.27 inch * 14.32 inch)
 function set_Panel(; nx::Integer=1, ny::Integer=1, share_xaxis::Bool=true, share_yaxis::Bool=true, chars::Float32=24.0f0, dpi::Float32=300.0f0, inch::Float32=15.0f0, xscale::Float32=1.0f0, yscale::Float32=1.0f0)
     # set sizes (font size, marker size, line width, and tick length)
-    fontsize = Int32(round(inch * 72 / chars)) # 72 pt = 1 inch
-    markersize = inch
-    linewidth = inch * 0.25f0
+    scale_factor = 1.0f0 * cbrt(Float32(max(nx, ny)))
+    fontsize = Int32(round(scale_factor * inch * 72 / chars)) # 72 pt = 1 inch
+    markersize = scale_factor * inch
+    linewidth = scale_factor * inch * 0.25f0
     ticklength = 6.0f0 * linewidth
 
     # configure axes

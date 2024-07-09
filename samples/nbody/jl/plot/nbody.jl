@@ -102,13 +102,13 @@ function main()
     # initialize matplotlib
     util_pyplot.config()
 
-    # Ngpu = 4
-    Ngpu = 3
+    Ngpu = 4
+    # Ngpu = 3
     gpu = Array{gpu_config,1}(undef, Ngpu)
     gpu[1] = gpu_config(name="h100sxm", root="mercury/h100sxm", has_openacc=true, caption="NVIDIA H100 SXM 80GB", num_cores=128 * 132, best_env_label="SYCL (icpx)")
-    # gpu[2] = gpu_config(name="gh200", root="mercury/gh200", has_openacc=true, caption="NVIDIA GH200 480GB", num_cores=128 * 132, best_env_label="CUDA")
-    gpu[2] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD MI210", num_cores=64 * 104, best_env_label="SYCL (acpp, packed FP32)", fastest_mode="default")
-    gpu[3] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel DC GPU Max 1100", num_cores=16 * 448, best_env_label="SYCL (icpx)", fastest_mode="default")
+    gpu[2] = gpu_config(name="gh200", root="mercury/gh200", has_openacc=true, caption="NVIDIA GH200 480GB", num_cores=128 * 132, best_env_label="CUDA")
+    gpu[3] = gpu_config(name="mi210", root="milan2/mi210", caption="AMD Instinct MI210", num_cores=64 * 104, best_env_label="SYCL (acpp, packed FP32)", fastest_mode="default")
+    gpu[4] = gpu_config(name="pvc", root="spr2/pvc", caption="Intel Data Center GPU Max 1100", num_cores=16 * 448, best_env_label="SYCL (icpx)", fastest_mode="default")
 
     ny = compare ? 2 : 1
 
@@ -502,7 +502,7 @@ function main()
             # xl, xr = at.get_xlim()
             # at.set_xlim(util_pyplot.scale_axis(gpu[gpu_id].num_cores, xr))
             at.semilogx()
-            at.yaxis.set_major_formatter(PyPlot.matplotlib.ticker.FuncFormatter(util_pyplot.scientific2))
+            at.yaxis.set_major_formatter(PyPlot.matplotlib.ticker.FuncFormatter(util_pyplot.scientific))
         end
         for fig in [perf_base_max, perf_fast_max, perf_base_med, perf_fast_med, sustained_perf_base_max, sustained_perf_fast_max, sustained_perf_base_med, sustained_perf_fast_med]
             at = fig.ax[begin]
@@ -633,8 +633,9 @@ function main()
                 at.semilogx()
                 at.tick_params(axis="x", which="minor", labelbottom=false)
             end
+            fig.ax[ii, begin].tick_params(axis="x", which="minor", labelbottom=true, labelsize=0.6 * fig.fs, pad=0.3 * fig.fs)
         end
-        fig.ax[begin, ny].yaxis.set_major_formatter(PyPlot.matplotlib.ticker.FuncFormatter(util_pyplot.scientific2))
+        fig.ax[begin, ny].yaxis.set_major_formatter(PyPlot.matplotlib.ticker.FuncFormatter(util_pyplot.scientific))
     end
     for fig in [compare_base_max, compare_fast_max, compare_base_med, compare_fast_med, compare_sustained_base_max, compare_sustained_fast_max, compare_sustained_base_med, compare_sustained_fast_med]
         for at in fig.ax
@@ -655,12 +656,13 @@ function main()
                 id = (ii - 1) + fig.nx * (fig.ny - jj)
                 caption = string("(", Char(97 + id), ")")
                 at = fig.ax[ii, jj]
-                at.text(0.03, 0.97, string(caption, "~", maptag), color="black", fontsize=fig.fs, horizontalalignment="left", verticalalignment="top", transform=at.transAxes, bbox=Dict("facecolor" => "white", "edgecolor" => "None", "alpha" => 0.75))
+                at.text(0.02, 0.98, string(caption, "~", maptag), color="black", fontsize=fig.fs * 0.8, horizontalalignment="left", verticalalignment="top", transform=at.transAxes, bbox=Dict("facecolor" => "white", "edgecolor" => "None", "alpha" => 0.75))
             end
 
             at = fig.ax[ii, end]
             handles, labels = at.get_legend_handles_labels()
-            at.legend(handles[end:-1:begin], labels[end:-1:begin], numpoints=1, handlelength=2.0, loc="best", fontsize=fig.fs)
+            at.legend(handles[end:-1:begin], labels[end:-1:begin], numpoints=1, handlelength=2.0, bbox_to_anchor=(0.99, 0.67), loc="upper right", fontsize=fig.fs * 0.75)
+            # at.legend(handles[end:-1:begin], labels[end:-1:begin], numpoints=1, handlelength=2.0, loc="best", fontsize=fig.fs * 0.8)
             handles = nothing
             labels = nothing
         end
