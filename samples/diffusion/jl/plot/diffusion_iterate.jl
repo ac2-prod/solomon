@@ -231,7 +231,7 @@ function main()
     end
 
     # output summary CSV file
-    summary |> CSV.write(string("fig/", "diffusion", "_stats", ".csv"), delim=',', writeheader=true)
+    summary |> CSV.write(string("fig/", "diffusion", "_iterate", "_stats", ".csv"), delim=',', writeheader=true)
 
     PyPlot.close("all")
     return nothing

@@ -279,6 +279,9 @@ function main()
         compare_med.fig.savefig(string("fig/", "diffusion", "_mode", "_med", ".pdf"), format="pdf", bbox_inches="tight")
     end
 
+    # output summary CSV file
+    summary |> CSV.write(string("fig/", "diffusion", "_mode", "_stats", ".csv"), delim=',', writeheader=true)
+
     PyPlot.close("all")
     return nothing
 end
