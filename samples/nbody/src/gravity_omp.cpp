@@ -23,6 +23,7 @@ void calc_acc(const int Ni, position *ipos, acceleration *iacc, const int Nj, po
     pi.w = eps * eps;  // set squared softening (Plummer softening)
     acceleration ai = {0.0F, 0.0F, 0.0F, 0.0F};
     // force evaluation
+    PRAGMA_ACC_LOOP(ACC_CLAUSE_SEQ)
     for (std::remove_const_t<decltype(Nj)> jj = 0; jj < Nj; jj++) {
       // load j-particle
       const position pj = jpos[jj];
