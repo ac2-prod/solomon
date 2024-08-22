@@ -184,7 +184,7 @@
 /// @remarks nonmonotonic: Chunks are assigned to threads in any order and the behavior of an application that depends on execution order of the chunks is unspecified.
 /// @remarks simd: Ignored when the loop is not associated with a SIMD construct, else new_chunk_size for all except the first and last chunks is chunk_size/simd_width * simd_width (simd_width: implementation-defined value).
 ///
-#define OMP_CLAUSE_SCHEDULE(...) ordered(__VA_ARGS__), ARGS_WITH_NUM(CLAUSE_TAG_OMP_FOR)
+#define OMP_CLAUSE_SCHEDULE(...) schedule(__VA_ARGS__), ARGS_WITH_NUM(CLAUSE_TAG_OMP_FOR)
 
 ///
 /// @brief add OpenMP clause "dist_schedule (kind [, chunk_size])" if applicable

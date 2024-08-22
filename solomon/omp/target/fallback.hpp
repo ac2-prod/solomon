@@ -151,6 +151,6 @@
 /// @details Shortcut for specifying a target construct containing a teams distribute parallel worksharing-loop SIMD construct and no other statements.
 /// @note clause: Any clause used for target or teams distribute parallel for simd.
 ///
-#define PRAGMA_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD(...) PRAGMA_OMP_TARGET_DISTRIBUTE_PARALLEL_FOR_SIMD(__VA_ARGS__)
+#define PRAGMA_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD(...) PRAGMA_OMP_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD(__VA_ARGS__)
 
 #endif  // !defined(SOLOMON_OMP_TARGET_FALLBACK_HPP)

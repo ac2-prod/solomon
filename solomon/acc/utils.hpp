@@ -62,7 +62,11 @@
 ///
 /// @brief _Pragma("acc data present (list)")
 ///
+#if defined(OFFLOAD_BY_OPENACC)
 #define PRAGMA_ACC_DATA_PRESENT(...) PRAGMA_ACC_DATA(ACC_CLAUSE_PRESENT(__VA_ARGS__))
+#else  // defined(OFFLOAD_BY_OPENACC)
+#define PRAGMA_ACC_DATA_PRESENT(...)
+#endif  // defined(OFFLOAD_BY_OPENACC)
 
 ///
 /// @brief _Pragma("acc enter data copyin (list)")

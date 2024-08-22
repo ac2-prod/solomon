@@ -111,6 +111,11 @@
 #define COMPARE_CLAUSE_TAG_OMP_TASKLOOP(x) x
 
 ///
+/// @brief matching macro about clause for omp interop
+///
+#define COMPARE_CLAUSE_TAG_OMP_INTEROP(x) x
+
+///
 /// @brief matching macro about clause for omp target
 ///
 #define COMPARE_CLAUSE_TAG_OMP_TARGET(x) x
