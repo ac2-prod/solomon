@@ -413,18 +413,102 @@
 
   </details>
 
-#### How to add clauses and/or lists
+### How to develop codes using Solomon
 
-## How to compile
+1. Include Solomon
+
+   ```c++
+   #include <solomon.hpp>
+   ```
+
+2. Insert offloading macros instead of OpenACC or OpenMP target directives
+
+   * For beginners in GPU computing, we recommend to use intuitive notations like `OFFLOAD(...)`
+   * Experienced developers of OpenACC or OpenMP target will prefer OpenACC/OpenMP-like notations
+     * In OpenMP-like notation, only notations like `PRAGMA_OMP_TARGET_*` or `OMP_TARGET_CLAUSE_*` are converted to OpenACC backend (e.g., `PRAGMA_OMP_ATOMIC(...)` will be transted as `_Pragma("omp atomic __VA_ARGS__)`)
+     * We strongly recommend not to adopt `PRAGMA_OMP_TARGET_DATA(...)` in your codes
+       * Alternative notations are `DATA_ACCESS_BY_DEVICE(...)` or `PRAGMA_ACC_DATA(...)` for data accessed by device (GPU), and `DATA_ACCESS_BY_HOST(...)` or `PRAGMA_ACC_HOST_DATA(...)` for data accessed by host (CPU)
+     * In OpenACC-like notation, inserting `DECLARE_OFFLOADED_END` or `PRAGMA_OMP_END_DECLARE_TARGET` is required when you insert `PRAGMA_ACC_ROUTINE(...)` (for proper translation to OpenMP target offloading)
+   * `IF_NOT_OFFLOADED(arg)` is available to hide directives when GPU offloading is enabled
+     * <details><summary> Example: `arg` appears only in the fallback mode (when GPU offloading is disabled: both OpenACC and OpenMP target are not enabled)</summary>
+
+       ```c++
+       OFFLOAD()
+       for(int i = 0; i < num; i++){
+         IF_NOT_OFFLOADED(PRAGMA_OMP_SIMD())
+         for(int j = 0; j < 16; j++){
+           // computation
+         }
+       }
+       ```
+
+       * Output in OpenMP target backend
+
+         ```c++
+         _Pragma("omp target teams loop")
+         for(int i = 0; i < num; i++){
+
+           for(int j = 0; j < 16; j++){
+             // computation
+           }
+         }
+         ```
+
+       * Output in fallback mode
+
+         ```c++
+         _Pragma("omp parallel for")
+         for(int i = 0; i < num; i++){
+           _Pragma("omp simd")
+           for(int j = 0; j < 16; j++){
+             // computation
+           }
+         }
+         ```
+
+     </details>
+
+   * Optional clauses must be passed as comma-separated notation as
+
+      ```c++
+      OFFLOAD(AS_INDEPENDENT, ACC_CLAUSE_VECTOR_LENGTH(128), OMP_TARGET_CLAUSE_COLLAPSE(3))
+      ```
+
+      * Mixture of intuitive and OpenACC/OpenMP-like notations are enabled
+      * `AS_INDEPENDENT` (or the correspondences: `ACC_CLAUSE_INDEPENDENT` and `OMP_TARGET_CLAUSE_SIMD`) must be specified at the head of all optional clauses
+      * Incompatible clauses are automatically dropped by Solomon
+   * We encourage to adopt combined macros (instead of individual macrose separately) for better conversion between OpenACC and OpenMP target
+     | recommended implementations | corresponding implementation (not recommended) |
+     | ---- | ---- |
+     | `OFFLOAD(...)` <br> `PRAGMA_ACC_KERNELS_LOOP(...)` <br> `PRAGMA_ACC_PARALLEL_LOOP(...)` | <br> `PRAGMA_ACC_KERNELS(...) PRAGMA_ACC_LOOP(...)` <br> `PRAGMA_ACC_PARALLEL(...) PRAGMA_ACC_LOOP(...)` |
+     | `DECLARE_DATA_ON_DEVICE(...)` <br> `PRAGMA_ACC_DATA_PRESENT(...)` | <br> `PRAGMA_ACC_DATA(ACC_CLAUSE_PRESENT(...))` |
+     | `OMP_TARGET_CLAUSE_MAP_TO(...)` | `OMP_TARGET_CLAUSE_MAP(OMP_TARGET_CLAUSE_TO(...))` |
+
+### How to compile codes using Solomon
+
+* Enable OpenACC or OpenMP target by compiler option
+* Specify the path to solomon (the path where `solomon.hpp` exists) as `-I/path/to/solomon`
+* Add compilation flag to specify the expected behabior of Solomon
+  | compilation flag | offloading backend | note |
+  | ---- | ---- | ---- |
+  | `-DOFFLOAD_BY_OPENACC` | OpenACC | use `kernels` construct in default |
+  | `-DOFFLOAD_BY_OPENACC -DOFFLOAD_BY_OPENACC_PARALLEL` | OpenACC | use `parallel` construct in default |
+  | `-DOFFLOAD_BY_OPENMP_TARGET` | OpenMP target | use `loop` directive in default |
+  | `-DOFFLOAD_BY_OPENMP_TARGET -DOFFLOAD_BY_OPENMP_TARGET_DISTRIBUTE` | OpenMP target | use `distribute` directive in default |
+  | | fallback mode | thread-parallelization for multicore CPUs using OpenMP |
+* See examples: [Makefile for nbody](samples/nbody/Makefile) and [Makefile for diffusion](samples/diffusion/Makefile)
 
 ## Samples
 
 ### nbody: sample of compute-intensive application
 
-* Collisionless $N$-body simulation based on direct method
+* [Collisionless $N$-body simulation based on direct method](samples/nbody/)
+  * Implementation using intuitive notation: `samples/nbody/src/[nbody gravity].cpp`
+  * Implementation using OpenACC-like notation: `samples/nbody/src/[nbody gravity]_acc.cpp`
+  * Implementation using OpenMP-like notation: `samples/nbody/src/[nbody gravity]_omp.cpp`
 
 ### diffusion: sample of memory-intensive application
 
-* Diffusion equation in 3D
-* Original implementation in OpenACC is available at https://github.com/hoshino-UTokyo/lecture_openacc (developed by Tetsuya Hoshino at Nagoya University)
+* [Diffusion equation in 3D](samples/diffusion/)
+* Original implementation in OpenACC is available at [GitHub](https://github.com/hoshino-UTokyo/lecture_openacc) (developed by Tetsuya Hoshino at Nagoya University)
 * Some trivial optimizations and refactoring are added
