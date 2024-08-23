@@ -498,6 +498,19 @@
   | | fallback mode | thread-parallelization for multicore CPUs using OpenMP |
 * See examples: [Makefile for nbody](samples/nbody/Makefile) and [Makefile for diffusion](samples/diffusion/Makefile)
 
+### How to extend capability of Solomon
+
+* Solomon accepts up to 32 clause candidates per directive
+  * If the current limitation (32) does not fit your implementation, increase the value as follows
+
+    ```sh
+    cd solomon/util # you will find jl/ and pickup.hpp in the directory
+    julia jl/check_clause.jl --max 64 >> pickup.hpp # example to reset the limitation as 64
+    # edit pickup.hpp appropriately (remove old CHECK_CLAUSE_* and APPEND_CLAUSE, and use new CHECK_CLAUSE_* and APPEND_CLAUSE)
+    ```
+
+  * Similar limitations exsit for some internal macros, and you can also increase such limitations
+
 ## Samples
 
 ### nbody: sample of compute-intensive application
