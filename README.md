@@ -423,14 +423,14 @@
 
 2. Insert offloading macros instead of OpenACC or OpenMP target directives
 
-   * For beginners in GPU computing, we recommend to use intuitive notations like `OFFLOAD(...)`
+   * For beginners, we recommend to use intuitive notations like `OFFLOAD(...)`
    * Experienced developers of OpenACC or OpenMP target will prefer OpenACC/OpenMP-like notations
      * In OpenMP-like notation, only notations like `PRAGMA_OMP_TARGET_*` or `OMP_TARGET_CLAUSE_*` are converted to OpenACC backend (e.g., `PRAGMA_OMP_ATOMIC(...)` will be transted as `_Pragma("omp atomic __VA_ARGS__)`)
      * We strongly recommend not to adopt `PRAGMA_OMP_TARGET_DATA(...)` in your codes
        * Alternative notations are `DATA_ACCESS_BY_DEVICE(...)` or `PRAGMA_ACC_DATA(...)` for data accessed by device (GPU), and `DATA_ACCESS_BY_HOST(...)` or `PRAGMA_ACC_HOST_DATA(...)` for data accessed by host (CPU)
      * In OpenACC-like notation, inserting `DECLARE_OFFLOADED_END` or `PRAGMA_OMP_END_DECLARE_TARGET` is required when you insert `PRAGMA_ACC_ROUTINE(...)` (for proper translation to OpenMP target offloading)
    * `IF_NOT_OFFLOADED(arg)` is available to hide directives when GPU offloading is enabled
-     * <details><summary> Example: `arg` appears only in the fallback mode (when GPU offloading is disabled: both OpenACC and OpenMP target are not enabled)</summary>
+     * <details><summary> Example: `arg` appears only in fallback mode (when GPU offloading is disabled (both OpenACC and OpenMP target are not enabled))</summary>
 
        ```c++
        OFFLOAD()
@@ -476,8 +476,8 @@
 
       * Mixture of intuitive and OpenACC/OpenMP-like notations are enabled
       * `AS_INDEPENDENT` (or the correspondences: `ACC_CLAUSE_INDEPENDENT` and `OMP_TARGET_CLAUSE_SIMD`) must be specified at the head of all optional clauses
-      * Incompatible clauses are automatically dropped by Solomon
-   * We encourage to adopt combined macros (instead of individual macrose separately) for better conversion between OpenACC and OpenMP target
+      * Solomon automatically drops incompatible clauses
+   * We encourage the adoption of combined macros (instead of individual macros separately) for better conversion between OpenACC and OpenMP target
      | recommended implementations | corresponding implementation (not recommended) |
      | ---- | ---- |
      | `OFFLOAD(...)` <br> `PRAGMA_ACC_KERNELS_LOOP(...)` <br> `PRAGMA_ACC_PARALLEL_LOOP(...)` | <br> `PRAGMA_ACC_KERNELS(...) PRAGMA_ACC_LOOP(...)` <br> `PRAGMA_ACC_PARALLEL(...) PRAGMA_ACC_LOOP(...)` |
@@ -488,7 +488,7 @@
 
 * Enable OpenACC or OpenMP target by compiler option
 * Specify the path to solomon (the path where `solomon.hpp` exists) as `-I/path/to/solomon`
-* Add compilation flag to specify the expected behabior of Solomon
+* Add compilation flags to specify the expected behabior of Solomon
   | compilation flag | offloading backend | note |
   | ---- | ---- | ---- |
   | `-DOFFLOAD_BY_OPENACC` | OpenACC | use `kernels` construct in default |
