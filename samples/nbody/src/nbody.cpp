@@ -285,16 +285,15 @@ int main(void) {
     const int iter = NMAX_CRIT / ((num < NMAX_CRIT) ? num : NMAX_CRIT);
 
     // launch benchmark
-    clock_gettime(CLOCK_MONOTONIC_RAW, &ini);
+    clock_gettime(CLOCK_MONOTONIC, &ini);
 
     // calculate gravitational acceleration
     for (int loop = 0; loop < iter; loop++) {
       calc_acc(num, pos, acc, num, pos, 4.0F * rad / static_cast<float>(num));
     }
-    // getLastCudaError("calc_acc");
 
     // finalize benchmark
-    clock_gettime(CLOCK_MONOTONIC_RAW, &end);
+    clock_gettime(CLOCK_MONOTONIC, &end);
 
     // record measured performance
     const auto elapsed = std::fma(1.0e-9, static_cast<double>(end.tv_nsec - ini.tv_nsec), end.tv_sec - ini.tv_sec) / static_cast<double>(iter);
