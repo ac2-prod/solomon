@@ -37,7 +37,7 @@
 
   * <details><summary>OpenACC directives</summary>
 
-    | input | output | converted output in OpenMP backend |
+    | input | output | counterpart in OpenMP backend |
     | ---- | ---- | ---- |
     | `PRAGMA_ACC_PARALLEL(...)` | `_Pragma("acc parallel __VA_ARGS__")` | `PRAGMA_OMP_TARGET_OFFLOADING_DEFAULT(__VA_ARGS__)` |
     | `PRAGMA_ACC_KERNELS(...)` | `_Pragma("acc kernels __VA_ARGS__")` | `PRAGMA_OMP_TARGET_OFFLOADING_DEFAULT(__VA_ARGS__)` |
@@ -53,7 +53,7 @@
 
   * <details><summary>OpenMP target directives</summary>
 
-    | input | output | converted output in OpenACC backend | output in fallback mode (CPU execution without offloading) |
+    | input | output | counterpart in OpenACC backend | counterpart in fallback mode (CPU execution without offloading) |
     | ---- | ---- | ---- | ---- |
     | `PRAGMA_OMP_TARGET(...)` | `_Pragma("omp target __VA_ARGS__")` | `PRAGMA_ACC(__VA_ARGS__)` | N/A (disregarded in fallback mode) |
     | `PRAGMA_OMP_TARGET_PARALLEL(...)` | `_Pragma("omp target parallel __VA_ARGS__")` | `PRAGMA_ACC_LAUNCH_DEFAULT(__VA_ARGS__)` | `PRAGMA_OMP_PARALLEL(__VA_ARGS__)` |
@@ -150,7 +150,7 @@
 
   * <details><summary>OpenACC directives</summary>
 
-    | input | output | converted output in OpenMP backend |
+    | input | output | counterpart in OpenMP backend |
     | ---- | ---- | ---- |
     | `PRAGMA_ACC_DATA(...)` | `_Pragma("acc data __VA_ARGS__")` | `PRAGMA_OMP_TARGET_DATA(__VA_ARGS__)` |
     | `PRAGMA_ACC_ENTER_DATA(...)` | `_Pragma("acc enter data __VA_ARGS__")` | `PRAGMA_OMP_TARGET_ENTER_DATA(__VA_ARGS__)` |
@@ -162,7 +162,7 @@
 
   * <details><summary>OpenMP target directives</summary>
 
-    | input | output | converted output in OpenACC backend | output in fallback mode (CPU execution without offloading) |
+    | input | output | counterpart in OpenACC backend | counterpart in fallback mode (CPU execution without offloading) |
     | ---- | ---- | ---- | ---- |
     | `PRAGMA_OMP_TARGET_DATA(...)` | `_Pragma("omp target data __VA_ARGS__")` | `PRAGMA_ACC_DATA(__VA_ARGS__)` | N/A (disregarded in fallback mode) |
     | `PRAGMA_OMP_TARGET_ENTER_DATA(...)` | `_Pragma("omp target enter data __VA_ARGS__")` | `PRAGMA_ACC_ENTER_DATA(__VA_ARGS__)` | N/A (disregarded in fallback mode) |
@@ -200,7 +200,7 @@
 
 * <details><summary>OpenACC clauses</summary>
 
-  | input | output | converted output in OpenMP backend | note |
+  | input | output | counterpart in OpenMP backend | note |
   | ---- | ---- | ---- | ---- |
   | `ACC_CLAUSE_IF(condition)` | `if(condition)` | `OMP_TARGET_CLAUSE_IF(condition)` ||
   | `ACC_CLAUSE_SELF(...)` | `self(__VA_ARGS__)` | N/A (disregarded in OpenMP backend) ||
@@ -253,7 +253,7 @@
 
 * <details><summary>OpenMP target clauses</summary>
 
-  | input | output | converted output in OpenACC backend | output in fallback mode (CPU execution without offloading) |
+  | input | output | counterpart in OpenACC backend | counterpart in fallback mode (CPU execution without offloading) |
   | ---- | ---- | ---- | ---- |
   | `OMP_TARGET_CLAUSE_ALIGNED(...)` | `OMP_CLAUSE_ALIGNED(__VA_ARGS__)` | N/A (disregarded in OpenACC backend) | `OMP_CLAUSE_ALIGNED(__VA_ARGS__)` |
   | `OMP_TARGET_CLAUSE_SIMDLEN(length)` | `OMP_CLAUSE_SIMDLEN(length)` | N/A (disregarded in OpenACC backend) | `OMP_CLAUSE_SIMDLEN(length)` |
