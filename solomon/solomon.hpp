@@ -3,6 +3,8 @@
 /// @author Yohei MIKI (The University of Tokyo)
 /// @brief pragmas to offload operations by directives
 ///
+/// @note please cite Miki & Hanawa (2024, IEEE Access, in press, https://doi.org/10.1109/ACCESS.2024.3509380)
+///
 /// @copyright Copyright (c) 2024 Yohei MIKI
 ///
 /// The MIT License is applied to this software, see LICENSE.txt
