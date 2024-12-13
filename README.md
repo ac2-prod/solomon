@@ -3,8 +3,8 @@
 ## Summary
 
 * Preprocessor macros to switch OpenACC and OpenMP target directives
-* See [Miki & Hanawa (2024, IEEE Access, in press)](https://doi.org/10.1109/ACCESS.2024.3509380) for detail
-* Please cite [Miki & Hanawa (2024, IEEE Access, in press)](https://doi.org/10.1109/ACCESS.2024.3509380)
+* See [Miki & Hanawa (2024, IEEE Access, vol. 12, pp. 181644-181665)](https://doi.org/10.1109/ACCESS.2024.3509380) for detail
+* Please cite [Miki & Hanawa (2024, IEEE Access, vol. 12, pp. 181644-181665)](https://doi.org/10.1109/ACCESS.2024.3509380)
 * Released under the MIT license, see LICENSE.txt
 * Copyright (c) 2024 Yohei MIKI
 
