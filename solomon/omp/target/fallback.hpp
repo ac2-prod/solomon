@@ -137,20 +137,30 @@
 /// @details Shortcut for specifying a target construct containing a teams loop construct and no other statements.
 /// @note clause: Any clause used for target or teams loop.
 ///
-#define PRAGMA_OMP_TARGET_TEAMS_LOOP(...) PRAGMA_OMP_TEAMS_LOOP(__VA_ARGS__)
+#define PRAGMA_OMP_TARGET_TEAMS_LOOP(...) PRAGMA_OMP_PARALLEL_FOR(__VA_ARGS__)
 
 ///
 /// @brief _Pragma("omp target teams distribute parallel for [clause [[,] clause] ... ]")
 /// @details Shortcut for specifying a target construct containing teams distribute parallel for and no other statements.
 /// @note clause: Any clause used for target or teams distribute parallel for.
 ///
-#define PRAGMA_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR(...) PRAGMA_OMP_TEAMS_DISTRIBUTE_PARALLEL_FOR(__VA_ARGS__)
+#define PRAGMA_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR(...) PRAGMA_OMP_PARALLEL_FOR(__VA_ARGS__)
 
 ///
 /// @brief _Pragma("omp target teams distribute parallel for simd [clause [[,] clause] ... ]")
 /// @details Shortcut for specifying a target construct containing a teams distribute parallel worksharing-loop SIMD construct and no other statements.
 /// @note clause: Any clause used for target or teams distribute parallel for simd.
 ///
-#define PRAGMA_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD(...) PRAGMA_OMP_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD(__VA_ARGS__)
+#define PRAGMA_OMP_TARGET_TEAMS_DISTRIBUTE_PARALLEL_FOR_SIMD(...) PRAGMA_OMP_PARALLEL_FOR_SIMD(__VA_ARGS__)
+
+///
+/// @brief add OpenMP target clause "thread_limit (num)" if applicable
+///
+/// @param[in] num
+///
+#if defined(OMP_TARGET_CLAUSE_THREAD_LIMIT)
+#undef OMP_TARGET_CLAUSE_THREAD_LIMIT
+#endif  // defined(OMP_TARGET_CLAUSE_THREAD_LIMIT)
+#define OMP_TARGET_CLAUSE_THREAD_LIMIT(num) OMP_CLAUSE_NUM_THREADS(num)
 
 #endif  // !defined(SOLOMON_OMP_TARGET_FALLBACK_HPP)

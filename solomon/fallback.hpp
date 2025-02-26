@@ -19,7 +19,10 @@
 #include "omp/target/utils.hpp"
 
 // converter from OpenACC to OpenMP target
-#include "acc2omp.hpp"
+#include "acc/utils.hpp"
+#include "convert/acc2omp/clause.hpp"
+#include "convert/acc2omp/directive.hpp"
+
 #endif  // defined(_OPENMP)
 
 #endif  // !defined(SOLOMON_FALLBACK_HPP)
