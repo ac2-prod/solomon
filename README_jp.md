@@ -136,6 +136,8 @@
   | `-DOFFLOAD_BY_OPENMP_TARGET -DOFFLOAD_BY_OPENMP_TARGET_DISTRIBUTE` | OpenMP target | デフォルトでは `distribute` 指示文を使用 |
   | | 縮退モード | OpenMP を用いたマルチコアCPU向けのスレッド並列 |
 
+* コンパイルフラグとして`-DPRINT_GENERATED_PRAGMA`を追加すると，実際に生成される指示文をコンパイル時メッセージに出力できます
+  * LLVMではwarning扱いとなるため，`-Werror`を指定している際には`-Wno-error=pragma-messages`も渡してこのメッセージがエラー扱いにならないようにしてください
 * 使用例： [N体計算用の Makefile](samples/nbody/Makefile) および [拡散方程式用の Makefile](samples/diffusion/Makefile)
 
 ### Solomon の拡張方法

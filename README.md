@@ -111,6 +111,8 @@
   | `-DOFFLOAD_BY_OPENMP_TARGET -DOFFLOAD_BY_OPENMP_TARGET_DISTRIBUTE` | OpenMP target | use `distribute` directive in default |
   | | fallback mode | thread-parallelization for multicore CPUs using OpenMP |
 
+* Adding the compile flag `-DPRINT_GENERATED_PRAGMA` allows you to output the actually generated directives as compile-time messages
+  * In LLVM, this is treated as a warning, so when specifying `-Werror`, also pass `-Wno-error=pragma-messages` to prevent these messages from being treated as errors
 * See examples: [Makefile for nbody](samples/nbody/Makefile) and [Makefile for diffusion](samples/diffusion/Makefile)
 
 ### How to extend capability of Solomon

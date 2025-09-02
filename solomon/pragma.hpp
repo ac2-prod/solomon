@@ -10,9 +10,26 @@
 #if !defined(SOLOMON_PRAGMA_HPP)
 #define SOLOMON_PRAGMA_HPP
 
+#if defined(PRINT_GENERATED_PRAGMA)
+#define PRAGMA_STR1(x) #x
+#define PRAGMA_STR(x) PRAGMA_STR1(x)
+
+///
+/// @brief print generated pragma
+///
+#define SHOW_PRAGMA(...) _Pragma(PRAGMA_STR(message("#pragma " PRAGMA_STR(__VA_ARGS__))))
+
+///
+/// @brief input arguments into _Pragma
+///
+#define PRAGMA(...)     \
+  _Pragma(#__VA_ARGS__) \
+      SHOW_PRAGMA(__VA_ARGS__)
+#else  // defined(PRINT_GENERATED_PRAGMA)
 ///
 /// @brief input arguments into _Pragma
 ///
 #define PRAGMA(...) _Pragma(#__VA_ARGS__)
+#endif  // defined(PRINT_GENERATED_PRAGMA)
 
 #endif  // !defined(SOLOMON_PRAGMA_HPP)
